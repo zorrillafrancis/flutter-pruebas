@@ -41,7 +41,7 @@ class _MyWidgetState extends State<Listview2>
     super.initState();
   }
 
-  void showDialog1(String value) {
+  void search(String value) {
     List<Map<String, dynamic>> result = [];
 
     if (value.isEmpty) {
@@ -74,6 +74,16 @@ class _MyWidgetState extends State<Listview2>
     setState(() {
       foundUser = allUsers;
     });
+  }
+
+  void edit(String text, int id) {
+    List<Map<String, dynamic>> result = [];
+    result = allUsers.where((user) => user["id"] == id).toList();
+
+/*
+    setState(() {
+      foundUser = result;
+    });*/
   }
 
   void onItemTapped(int index) {
@@ -130,7 +140,7 @@ class _MyWidgetState extends State<Listview2>
                     fillColor: Color.fromARGB(31, 240, 234, 234),
                     filled: true),
                 onChanged: (text) {
-                  showDialog1(text.toUpperCase());
+                  search(text.toUpperCase());
                 },
               ),
               const SizedBox(height: 10),
@@ -210,7 +220,14 @@ class _MyWidgetState extends State<Listview2>
                                 )
                               ];
                             },
-                            onSelected: (String value) {},
+                            onSelected: (String value) {
+                              if (value == 'delete' && 1 == 1) {
+                                showAlert(context, foundUser[index]);
+                              } else {
+                                var data = foundUser[index];
+                                showFullModal(context, data);
+                              }
+                            },
                           ),
                         ),
                       );
@@ -249,4 +266,163 @@ class _MyWidgetState extends State<Listview2>
       ),
     );
   }
+
+  showAlert(BuildContext context, Map<String, dynamic> id) {
+    // set up the button
+    Widget cancelButton = TextButton(
+      child: const Text("No"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: const Text("Si"),
+      onPressed: () {
+        delete(id);
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Borrar"),
+      content: const Text("Desea borrar el registro?"),
+      actions: [cancelButton, continueButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }
+
+showFullModal(context, data) {
+  String name = data["name"];
+  int age = data["age"];
+
+  TextEditingController txtName = TextEditingController();
+  TextEditingController txtEdad = TextEditingController();
+
+  txtName.text = name;
+  txtEdad.text = age.toString();
+
+  showGeneralDialog(
+    context: context,
+    barrierDismissible: false, // should dialog be dismissed when tapped outside
+    barrierLabel: "Modal", // label for barrier
+    transitionDuration: const Duration(
+        milliseconds:
+            200), // how long it takes to popup dialog after button click
+    pageBuilder: (_, __, ___) {
+      // your widget implementation
+      return Scaffold(
+        appBar: AppBar(
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            leading: IconButton(
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            title: const Text(
+              "Titulo de Pantalla",
+              style: TextStyle(
+                  color: Colors.black87, fontFamily: 'Overpass', fontSize: 20),
+            ),
+            elevation: 0.0),
+        backgroundColor: Colors.white.withOpacity(0.90),
+        body: Container(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          decoration: const BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: Color(0xfff8f8f8),
+                width: 1,
+              ),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: TextField(
+                  controller: txtName,
+                  decoration: const InputDecoration(
+                      alignLabelWithHint: false,
+                      label: Text('Nombre'),
+                      hintText: "texto oculto",
+                      border: OutlineInputBorder()),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: TextField(
+                  controller: txtEdad,
+                  decoration: const InputDecoration(
+                      alignLabelWithHint: true,
+                      label: Text('Edad'),
+                      border: OutlineInputBorder()),
+                ),
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                ButtonTheme(
+                  minWidth: 200.0,
+                  height: 150.0,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.save),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        backgroundColor: Colors.pink,
+                        foregroundColor: Colors.white,
+                        elevation: 15,
+                        shadowColor: Colors.pink,
+                        fixedSize: const Size(170, 35),
+                        shape: const StadiumBorder()),
+                    label: const Text("Cancelar"),
+                  ),
+                ),
+                const SizedBox(width: 5),
+                ElevatedButton.icon(
+                  onHover: (value) {
+                    print('object');
+                  },
+                  icon: const Icon(Icons.save),
+                  onPressed: () {
+                    var object = _MyWidgetState();
+                    Navigator.of(context).pop();
+                    object.edit(txtName.text, data["id"]);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      elevation: 15,
+                      shadowColor: Colors.green,
+                      fixedSize: const Size(170, 35),
+                      shape: const StadiumBorder()),
+                  label: const Text('Guardar'),
+                ),
+              ]),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+sendedit() {}
