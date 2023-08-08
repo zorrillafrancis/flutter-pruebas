@@ -19,6 +19,8 @@ class Bienvenida extends StatefulWidget {
 }
 
 class _BienvenidaState extends State<Bienvenida> {
+  Empresa emp = Empresa('nombre', 'propietario', 500);
+
   setData() async {
     if (kDebugMode) {
       print('object');
@@ -28,6 +30,12 @@ class _BienvenidaState extends State<Bienvenida> {
 
     prefs.setString('userName', widget.usuario);
     prefs.setString('userPass', widget.password);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print(emp.nombre);
   }
 
   @override
@@ -83,4 +91,12 @@ class _BienvenidaState extends State<Bienvenida> {
           ],
         ));
   }
+}
+
+class Empresa {
+  String nombre = "";
+  String propietario = "";
+  int ingreso = 0;
+
+  Empresa(String nombre, String propietario, int ingreso);
 }

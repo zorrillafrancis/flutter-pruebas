@@ -99,25 +99,3 @@ Widget password(TextEditingController txtPass) {
     ),
   );
 }
-
-Widget entreButton(BuildContext context, String user, String pass) {
-  return ElevatedButton.icon(
-    label: const Text('Entrar'),
-    icon: const Icon(Icons.login),
-    onPressed: () {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (BuildContext context) {
-        return Bienvenida(usuario: user, password: pass);
-      }));
-      //Navigator.pushNamed(context, '/listview_2');
-    },
-    style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        backgroundColor: Colors.pink,
-        foregroundColor: Colors.white,
-        elevation: 15,
-        shadowColor: Colors.pink,
-        fixedSize: const Size(150, 40),
-        shape: const StadiumBorder()),
-  );
-}
