@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/presentation/screens/listview/listview_detail.dart';
 
@@ -76,14 +77,11 @@ class _MyWidgetState extends State<Listview2>
     });
   }
 
-  void edit(String text, int id) {
-    List<Map<String, dynamic>> result = [];
-    result = allUsers.where((user) => user["id"] == id).toList();
+  void edit(Map<String, dynamic> data) {
+    //  List<Map<String, dynamic>> result = [];
+    foundUser = allUsers.where((user) => user["id"] == data["id"]).toList();
 
-/*
-    setState(() {
-      foundUser = result;
-    });*/
+    setState(() {});
   }
 
   void onItemTapped(int index) {
@@ -97,9 +95,9 @@ class _MyWidgetState extends State<Listview2>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("AppMaking.com"),
+        title: const Text('School Solutions'),
         centerTitle: true,
-        backgroundColor: const Color(0xff764abc),
+        backgroundColor: Colors.lightBlue,
         actions: [
           PopupMenuButton(onSelected: (value) {
             // your logic
@@ -225,7 +223,9 @@ class _MyWidgetState extends State<Listview2>
                                 showAlert(context, foundUser[index]);
                               } else {
                                 var data = foundUser[index];
-                                showFullModal(context, data);
+                                setState(() {
+                                  showFullModal(context, data);
+                                });
                               }
                             },
                           ),
@@ -398,13 +398,20 @@ showFullModal(context, data) {
                 const SizedBox(width: 5),
                 ElevatedButton.icon(
                   onHover: (value) {
-                    print('object');
+                    if (kDebugMode) {
+                      print('object');
+                    }
                   },
                   icon: const Icon(Icons.save),
                   onPressed: () {
-                    var object = _MyWidgetState();
+                    // var object = _MyWidgetState();
+                    /*var result = object.allUsers
+                        .where((user) => user["id"] == data["id"])
+                        .toList();*/
+
                     Navigator.of(context).pop();
-                    object.edit(txtName.text, data["id"]);
+
+                    //object.edit(data);
                   },
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
