@@ -44,7 +44,7 @@ class _BienvenidaState extends State<Bienvenida> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('School Solutions'),
+          title: const Text('Sx'),
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.school),

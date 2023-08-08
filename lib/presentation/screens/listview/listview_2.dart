@@ -13,6 +13,7 @@ class _MyWidgetState extends State<Listview2>
     with SingleTickerProviderStateMixin {
   var selectedItem = '';
   int _selectedIndex = 0;
+  
   List<Map<String, dynamic>> allUsers = [
     {"id": 1, "name": "Francis", "age": 30},
     {"id": 2, "name": "Ana", "age": 20},
@@ -95,7 +96,7 @@ class _MyWidgetState extends State<Listview2>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('School Solutions'),
+        title: const Text('sx'),
         centerTitle: true,
         backgroundColor: Colors.lightBlue,
         actions: [
@@ -432,4 +433,3 @@ showFullModal(context, data) {
   );
 }
 
-sendedit() {}
