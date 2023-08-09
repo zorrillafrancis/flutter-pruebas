@@ -16,10 +16,13 @@ class Restfull extends StatefulWidget {
 
 class _RestfullState extends State<Restfull> {
   Pokemon? pokemon;
-  Gif? listadoGifs;
+  Future<List<Datum>>? listadoGifs;
   String url = "";
 
-  Future<void> getGifs() async {
+  Future<List<Datum>> getGifs() async {
+    Gif? list;
+    List<Datum>? listDatum = [];
+
     String url =
         "https://api.giphy.com/v1/gifs/trending?api_key=K7Ear4ZUaTO32x0OdsI181JV1iQqAmro&limit=25&offset=0&rating=g&bundle=messaging_non_clips";
 
@@ -29,18 +32,18 @@ class _RestfullState extends State<Restfull> {
       try {
         String body = utf8.decode(response.bodyBytes);
         var jsonData = json.decode(body);
-        listadoGifs = Gif.fromJson(jsonData);
+        list = Gif.fromJson(jsonData);
 
-        /*    for (var item in jsonData['data']) {
+        for (Datum item in list.data) {
+          listDatum.add(item);
           print(item);
-        } */
-
-        print(listadoGifs);
-        setState(() {});
+        }
       } catch (e) {
         print(e);
       }
     }
+
+    return listDatum;
   }
 
   Future<void> getPokemon() async {
@@ -58,7 +61,7 @@ class _RestfullState extends State<Restfull> {
   @override
   void initState() {
     super.initState();
-    getGifs();
+    listadoGifs = getGifs();
   }
 
   @override
@@ -71,27 +74,47 @@ class _RestfullState extends State<Restfull> {
               title: const Text('Material App Bar'),
             ),
             body: Center(
-              child: Column(
+                child: FutureBuilder(
+                    future: listadoGifs,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<Datum>> snapshot) {
+                      if (snapshot.data == null) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return ListView.builder(
+                          itemCount: snapshot.data?.length,
+                          itemBuilder: (ctx, index) => ListTile(
+                            leading: CircleAvatar(
+                                backgroundColor: const Color(0xff764abc),
+                                child: Text(
+                                  snapshot.data![index].title
+                                      .toString()
+                                      .trim()
+                                      .substring(0, 5),
+                                  style: const TextStyle(color: Colors.white),
+                                )),
+                            title: Text(snapshot.data![index].title ?? 'nada'),
+                            subtitle:
+                                Text(snapshot.data![index].username ?? 'nada'),
+                            contentPadding: const EdgeInsets.only(bottom: 1.0),
+                            trailing: Image.network(snapshot
+                                .data![index].images!.original.url
+                                .toString()),
+                          ),
+                        );
+                      }
+                    })
+                /*Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(listadoGifs?.data[0].username ?? 'no nada'),
                     if (listadoGifs?.data != null)
                       Image.network(listadoGifs?.data[0].images?.original.url ??
                           'no nada'),
-                    /* ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: listadoGifs?.data.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(listadoGifs?.data[index].title ?? ''),
-                          visualDensity: const VisualDensity(vertical: 1),
-                          leading:
-                              Text(listadoGifs?.data[index].username ?? ''),
-                        );
-                      },
-                    ) */
-                  ]),
-            )));
+                  ]),*/
+                )));
 
     /*Center(child: ListView.builder(
           itemBuilder: (context, index) {
@@ -106,4 +129,11 @@ class _RestfullState extends State<Restfull> {
         )),
       ),*/
   }
+}
+
+getText(AsyncSnapshot<List<Datum>> snapshot, int index) {
+  if (snapshot.data != null) {
+    return snapshot.data![index].title.toString().trim().substring(0, 1);
+  }
+  return "hola";
 }
