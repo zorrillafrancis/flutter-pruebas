@@ -57,84 +57,66 @@ class _RestfullState extends State<Restfull> {
         debugShowCheckedModeBanner: false,
         title: 'Material App',
         home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Material App Bar'),
-          ),
-          body: SingleChildScrollView(
-            physics: ScrollPhysics(),
-            child: Column(
-              children: <Widget>[
-                Text('Hey'),
-                FutureBuilder(
-                    future: listadoGifs,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<Datum>> snapshot) {
-                      if (snapshot.data == null) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                color: Colors.white,
-                                elevation: 0.4,
-                                margin: const EdgeInsets.symmetric(vertical: 8),
-                                shadowColor: Colors.red,
-                                child: ListTile(
-                                    onTap: () {},
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 2, horizontal: 10),
-                                    visualDensity:
-                                        const VisualDensity(vertical: 1),
-                                    leading: const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [Text('78547')],
-                                    ),
-                                    title: Text(
-                                      snapshot.data![index].title.toString(),
-                                      style:
-                                          const TextStyle(color: Colors.black),
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(getDate(snapshot
-                                            .data![index].importDatetime)),
-                                        Text(
-                                          snapshot.data![index].username
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                      ],
-                                    ),
-                                    trailing: Text(getCurrency(2000).toString(),
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500)),
-                                    enabled: snapshot.data![index].username
-                                            .toString() !=
-                                        ""),
-                              );
-                            });
-                      }
-                    }),
-                ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 100,
-                    itemBuilder: (context, index) {
-                      return Text('Some text');
-                    })
-              ],
+            appBar: AppBar(
+              title: const Text('Material App Bar'),
             ),
-          ),
-        ));
+            body: Center(
+              child: FutureBuilder(
+                  future: listadoGifs,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Datum>> snapshot) {
+                    if (snapshot.data == null) {
+                      return const Center(
+                        child: Text('11111111'),
+                      );
+                    } else {
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: 25,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              margin: EdgeInsets.all(8.0),
+                              elevation: 0.5,
+                              child: ListTile(
+                                  onTap: () {},
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 2, horizontal: 10),
+                                  visualDensity:
+                                      const VisualDensity(vertical: 1),
+                                  leading: const Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [Text('78547')],
+                                  ),
+                                  title: Text(
+                                    snapshot.data![index].title.toString(),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(getDate(snapshot
+                                          .data![index].importDatetime)),
+                                      Text(
+                                        snapshot.data![index].username
+                                            .toString(),
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: Text(getCurrency(2000).toString(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w500)),
+                                  enabled: snapshot.data![index].username
+                                          .toString() !=
+                                      ""),
+                            );
+                          });
+                    }
+                  }),
+            )));
   }
 }
 
