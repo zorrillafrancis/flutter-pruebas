@@ -72,7 +72,7 @@ class _BienvenidaState extends State<Bienvenida> {
                   onPressed: () {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (BuildContext context) {
-                      return Listview2();
+                      return const Listview2();
                     }));
                     //Navigator.pushNamed(context, '/listview_2');
                   },

@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mi_app_01/models/pokemon.dart';
-
+import 'package:intl/intl.dart';
 import '../../../models/gif.dart';
+import 'package:money_formatter/money_formatter.dart';
 
 void main() => runApp(const Restfull());
 
@@ -15,7 +15,6 @@ class Restfull extends StatefulWidget {
 }
 
 class _RestfullState extends State<Restfull> {
-  Pokemon? pokemon;
   Future<List<Datum>>? listadoGifs;
   String url = "";
 
@@ -46,18 +45,6 @@ class _RestfullState extends State<Restfull> {
     return listDatum;
   }
 
-  Future<void> getPokemon() async {
-    String url = "https://pokeapi.co/api/v2/pokemon/1";
-
-    final response = await http.get(Uri.parse(url));
-    String body = utf8.decode(response.bodyBytes);
-    var jsonData = json.decode(body);
-
-    pokemon = Pokemon.fromJson(jsonData);
-
-    setState(() {});
-  }
-
   @override
   void initState() {
     super.initState();
@@ -70,11 +57,15 @@ class _RestfullState extends State<Restfull> {
         debugShowCheckedModeBanner: false,
         title: 'Material App',
         home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Material App Bar'),
-            ),
-            body: Center(
-                child: FutureBuilder(
+          appBar: AppBar(
+            title: const Text('Material App Bar'),
+          ),
+          body: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                Text('Hey'),
+                FutureBuilder(
                     future: listadoGifs,
                     builder: (BuildContext context,
                         AsyncSnapshot<List<Datum>> snapshot) {
@@ -84,50 +75,66 @@ class _RestfullState extends State<Restfull> {
                         );
                       } else {
                         return ListView.builder(
-                          itemCount: snapshot.data?.length,
-                          itemBuilder: (ctx, index) => ListTile(
-                            leading: CircleAvatar(
-                                backgroundColor: const Color(0xff764abc),
-                                child: Text(
-                                  snapshot.data![index].title
-                                      .toString()
-                                      .trim()
-                                      .substring(0, 5),
-                                  style: const TextStyle(color: Colors.white),
-                                )),
-                            title: Text(snapshot.data![index].title ?? 'nada'),
-                            subtitle:
-                                Text(snapshot.data![index].username ?? 'nada'),
-                            contentPadding: const EdgeInsets.only(bottom: 1.0),
-                            trailing: Image.network(snapshot
-                                .data![index].images!.original.url
-                                .toString()),
-                          ),
-                        );
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                color: Colors.white,
+                                elevation: 0.4,
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                shadowColor: Colors.red,
+                                child: ListTile(
+                                    onTap: () {},
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 2, horizontal: 10),
+                                    visualDensity:
+                                        const VisualDensity(vertical: 1),
+                                    leading: const Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [Text('78547')],
+                                    ),
+                                    title: Text(
+                                      snapshot.data![index].title.toString(),
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(getDate(snapshot
+                                            .data![index].importDatetime)),
+                                        Text(
+                                          snapshot.data![index].username
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Text(getCurrency(2000).toString(),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500)),
+                                    enabled: snapshot.data![index].username
+                                            .toString() !=
+                                        ""),
+                              );
+                            });
                       }
+                    }),
+                ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: 100,
+                    itemBuilder: (context, index) {
+                      return Text('Some text');
                     })
-                /*Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(listadoGifs?.data[0].username ?? 'no nada'),
-                    if (listadoGifs?.data != null)
-                      Image.network(listadoGifs?.data[0].images?.original.url ??
-                          'no nada'),
-                  ]),*/
-                )));
-
-    /*Center(child: ListView.builder(
-          itemBuilder: (context, index) {
-            return ListTile(
-                onLongPress: () {},
-                title: const Text('widget'),
-                subtitle: const Text('subtitle'),
-                visualDensity: VisualDensity.compact,
-                leading: const CircleAvatar(child: Text('child')),
-                trailing: const Icon(Icons.double_arrow));
-          },
-        )),
-      ),*/
+              ],
+            ),
+          ),
+        ));
   }
 }
 
@@ -136,4 +143,32 @@ getText(AsyncSnapshot<List<Datum>> snapshot, int index) {
     return snapshot.data![index].title.toString().trim().substring(0, 1);
   }
   return "hola";
+}
+
+String getCurrency(double value) {
+  MoneyFormatter fmf = MoneyFormatter(
+      amount: value,
+      settings: MoneyFormatterSettings(
+          symbol: 'RD\$',
+          thousandSeparator: ',',
+          decimalSeparator: '.',
+          symbolAndNumberSeparator: '',
+          fractionDigits: 2,
+          compactFormatType: CompactFormatType.long));
+
+  return fmf.output.symbolOnLeft;
+}
+
+String isNull(data) {
+  if (data == 'null') {
+    return '';
+  }
+
+  return data;
+}
+
+getDate(now) {
+  String formattedDate = DateFormat('dd/MM/yyyy').format(now);
+
+  return formattedDate;
 }
