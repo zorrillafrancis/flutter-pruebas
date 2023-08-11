@@ -2,8 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:mi_app_01/presentation/screens/menu/menu_bottom.dart';
 import '../../../models/gif.dart';
 import 'package:money_formatter/money_formatter.dart';
+
+import '../menu/menu_header.dart';
+import '../listview/listview_detail.dart';
 
 void main() => runApp(const Restfull());
 
@@ -17,6 +21,7 @@ class Restfull extends StatefulWidget {
 class _RestfullState extends State<Restfull> {
   Future<List<Datum>>? listadoGifs;
   String url = "";
+  int _selectedIndex = 1;
 
   Future<List<Datum>> getGifs() async {
     Gif? list;
@@ -45,6 +50,14 @@ class _RestfullState extends State<Restfull> {
     return listDatum;
   }
 
+  void onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  search(value) {}
+
   @override
   void initState() {
     super.initState();
@@ -54,69 +67,130 @@ class _RestfullState extends State<Restfull> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Material App',
-        home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Material App Bar'),
-            ),
-            body: Center(
-              child: FutureBuilder(
-                  future: listadoGifs,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Datum>> snapshot) {
-                    if (snapshot.data == null) {
-                      return const Center(
-                        child: Text('11111111'),
-                      );
-                    } else {
-                      return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: 25,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              margin: EdgeInsets.all(8.0),
-                              elevation: 0.5,
-                              child: ListTile(
-                                  onTap: () {},
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 2, horizontal: 10),
-                                  visualDensity:
-                                      const VisualDensity(vertical: 1),
-                                  leading: const Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [Text('78547')],
-                                  ),
-                                  title: Text(
-                                    snapshot.data![index].title.toString(),
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(getDate(snapshot
-                                          .data![index].importDatetime)),
-                                      Text(
-                                        snapshot.data![index].username
-                                            .toString(),
+      debugShowCheckedModeBanner: false,
+      title: 'Material App',
+      home: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: MenuHeader().getAppBar('Facturas'),
+          body: Column(
+            children: [
+              Column(
+                children: [
+                  TextField(
+                    decoration: const InputDecoration(
+                        labelText: 'Buscar',
+                        suffixIcon: Icon(Icons.search),
+                        hintText: 'Buscar',
+                        fillColor: Color.fromARGB(31, 240, 234, 234),
+                        filled: true),
+                    onChanged: (text) {
+                      search(text.toUpperCase());
+                    },
+                  ),
+                ],
+              ),
+              Container(),
+              const SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: FutureBuilder(
+                    future: listadoGifs,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<Datum>> snapshot) {
+                      if (snapshot.data == null) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: 10,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                margin: EdgeInsets.all(8.0),
+                                elevation: 0.5,
+                                child: ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                numeroFactura: snapshot
+                                                    .data![index].username
+                                                    .toString()),
+                                          ));
+                                    },
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 2, horizontal: 10),
+                                    visualDensity:
+                                        const VisualDensity(vertical: 1),
+                                    leading: const Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [Text('78547')],
+                                    ),
+                                    title: Text(
+                                      snapshot.data![index].title.toString(),
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(getDate(snapshot
+                                            .data![index].importDatetime)),
+                                        Text(
+                                          snapshot.data![index].username
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Text(getCurrency(2000).toString(),
                                         style: const TextStyle(
-                                            fontSize: 12,
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ],
-                                  ),
-                                  trailing: Text(getCurrency(2000).toString(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500)),
-                                  enabled: snapshot.data![index].username
-                                          .toString() !=
-                                      ""),
-                            );
-                          });
-                    }
-                  }),
-            )));
+                                            fontWeight: FontWeight.w500)),
+                                    enabled: snapshot.data![index].username
+                                            .toString() !=
+                                        ""),
+                              );
+                            });
+                      }
+                    }),
+              ),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.home),
+                label: 'Home',
+                backgroundColor: Colors.blue[500],
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.business),
+                label: 'Facturas',
+                backgroundColor: Colors.blue[500],
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.school),
+                label: 'School',
+                backgroundColor: Colors.blue[500],
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.settings),
+                label: 'Configuración',
+                backgroundColor: Colors.blue[500],
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.black,
+            onTap: onItemTapped,
+          )),
+    );
   }
 }
 

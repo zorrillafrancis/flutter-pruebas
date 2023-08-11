@@ -13,7 +13,7 @@ class _MyWidgetState extends State<Listview2>
     with SingleTickerProviderStateMixin {
   var selectedItem = '';
   int _selectedIndex = 0;
-  
+
   List<Map<String, dynamic>> allUsers = [
     {"id": 1, "name": "Francis", "age": 30},
     {"id": 2, "name": "Ana", "age": 20},
@@ -186,7 +186,8 @@ class _MyWidgetState extends State<Listview2>
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const Details(),
+                                  builder: (context) =>
+                                      Details(numeroFactura: ''),
                                 ));
                           },
                           visualDensity: const VisualDensity(vertical: 1),
@@ -247,7 +248,7 @@ class _MyWidgetState extends State<Listview2>
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.business),
-            label: 'Business',
+            label: 'Facturas',
             backgroundColor: Colors.blue[500],
           ),
           BottomNavigationBarItem(
@@ -432,4 +433,3 @@ showFullModal(context, data) {
     },
   );
 }
-
