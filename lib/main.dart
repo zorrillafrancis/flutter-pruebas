@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/presentation/screens/api/restfull.dart';
 import 'package:mi_app_01/presentation/screens/listview/listview_detail.dart';
+import 'package:mi_app_01/push/push.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const Push());
 }
 
 class MyApp extends StatelessWidget {
@@ -11,9 +13,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Titulo",
-        home: Details(numeroFactura: ''));
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: Details(
+          numeroFactura: '',
+        ));
   }
 }

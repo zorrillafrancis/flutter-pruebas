@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "955877373907",
+    "project_id": "schoolsolutions-push",
+    "storage_bucket": "schoolsolutions-push.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955877373907:android:7fe3debd1c9a67f720e126",
+        "android_client_info": {
+          "package_name": "rep.schoolsolutionscrm.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "955877373907-ni1scj6317je402ophf4jl7v7raoirn8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rep.schoolsolutionscrm.com",
+            "certificate_hash": "41de293b52ce1e2439b4e03dafe6b2fd48ac90af"
+          }
+        },
+        {
+          "client_id": "955877373907-ho11eton3j7guvok4366252bp8qabsvl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB64-8lMyF2JPB4sFrbbEOrGqPjLvvj7Is"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "955877373907-ho11eton3j7guvok4366252bp8qabsvl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
