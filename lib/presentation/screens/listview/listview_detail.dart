@@ -6,7 +6,7 @@ import 'package:mi_app_01/card/profilepage.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_bottom.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_header.dart';
 import 'package:http/http.dart' as http;
-import '../../../models/Gif.dart';
+import '../../../models/gif.dart';
 import '../../../utils/utils.dart';
 
 class Details extends StatefulWidget {

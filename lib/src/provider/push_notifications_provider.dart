@@ -5,11 +5,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_app_installations/firebase_app_installations.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../data/data-entity.dart';
 import '../../main.dart';
 
 FirebaseInstallations installations = FirebaseInstallations.instance;
 
 class PushNotificationProvider {
+  DataEntity de = DataEntity();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final _mensajesStreamcontroller = StreamController<String>.broadcast();
   Stream<String> get mensajes => _mensajesStreamcontroller.stream;
@@ -18,6 +20,7 @@ class PushNotificationProvider {
     _firebaseMessaging.getToken().then((token) {
       print('====== token ======');
       print(token);
+      de.saveToken(token!, 4);
     });
 
     // workaround for onLaunch: When the app is completely closed (not in the background) and opened directly from the push notification

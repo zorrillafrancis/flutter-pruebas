@@ -1,4 +1,3 @@
-//
 //     final gif = gifFromJson(jsonString);
 
 import 'dart:convert';
