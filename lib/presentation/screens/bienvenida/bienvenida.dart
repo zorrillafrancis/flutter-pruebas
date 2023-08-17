@@ -62,30 +62,32 @@ class _BienvenidaState extends State<Bienvenida> {
                   padding: EdgeInsets.all(8),
                   child: Text(
                     'Bienvenido',
-                    style: TextStyle(fontFamily: 'RobotoMono'),
+                    style: TextStyle(fontFamily: 'RobotoMono', fontSize: 20),
                   ),
                 ),
                 const SizedBox(height: 150),
-                ElevatedButton.icon(
-                  label: const Text('Facturas'),
-                  icon: const Icon(Icons.receipt),
-                  onPressed: () {
-                    Navigator.of(context).push(
+                SizedBox(
+                    width: 160, // <-- Your width
+                    height: 100, // <-- Your height
+                    child: ElevatedButton.icon(
+                      label: const Text('Facturas'),
+                      icon: const Icon(Icons.receipt),
+                      onPressed: () {
+                        /*  Navigator.of(context).push(
                         MaterialPageRoute(builder: (BuildContext context) {
                       return const Listview2();
-                    }));
-                    //Navigator.pushNamed(context, '/listview_2');
-                  },
-                  style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      backgroundColor: Colors.lightBlue,
-                      foregroundColor: Colors.white,
-                      elevation: 10,
-                      shadowColor: Colors.lightBlue,
-                      fixedSize: const Size(170, 40),
-                      shape: const StadiumBorder()),
-                ),
-                const SizedBox(height: 100),
+                    }));*/
+                        Navigator.pushNamed(context, 'facturaListado');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        backgroundColor: Colors.lightBlue,
+                        foregroundColor: Colors.white,
+                        elevation: 8,
+                        shadowColor: Colors.lightBlue,
+                        fixedSize: const Size(170, 40),
+                      ),
+                    ))
               ],
             ),
           ],

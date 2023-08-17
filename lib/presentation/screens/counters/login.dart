@@ -27,51 +27,70 @@ class _LoginState extends State<Login> {
     }));
   }
 
+  getData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userName = prefs.getString("userName") ?? '';
+
+    return userName;
+  }
+
   @override
   Widget build(BuildContext context) {
-    loadData(context);
-
-    return Scaffold(
-        body: Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-            image: NetworkImage(
-                'https://img.freepik.com/vector-premium/paisaje-montana-bosque-arboles-noche_16058-115.jpg'),
-            fit: BoxFit.cover),
-      ),
-      child: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Log In',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          username(txtName),
-          password(txtPass),
-          ElevatedButton.icon(
-            label: const Text('Entrar'),
-            icon: const Icon(Icons.login),
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return Bienvenida(
-                    usuario: txtName.text, password: txtPass.text);
-              }));
-              //Navigator.pushNamed(context, '/listview_2');
-            },
-            style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                backgroundColor: Colors.pink,
-                foregroundColor: Colors.white,
-                elevation: 15,
-                shadowColor: Colors.pink,
-                fixedSize: const Size(150, 40),
-                shape: const StadiumBorder()),
-          )
-        ],
-      )),
-    ));
+    return FutureBuilder<String?>(
+      future: getData(),
+      builder: (context, snapshot) {
+        print(snapshot.data);
+        if (snapshot.data == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.data != '') {
+          return Bienvenida(usuario: "", password: "");
+        } else {
+          return Scaffold(
+              body: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(
+                      'https://img.freepik.com/vector-premium/paisaje-montana-bosque-arboles-noche_16058-115.jpg'),
+                  fit: BoxFit.cover),
+            ),
+            child: Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Log In',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                username(txtName),
+                password(txtPass),
+                ElevatedButton.icon(
+                  label: const Text('Entrar'),
+                  icon: const Icon(Icons.login),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return Bienvenida(
+                          usuario: txtName.text, password: txtPass.text);
+                    }));
+                    //Navigator.pushNamed(context, '/listview_2');
+                  },
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      backgroundColor: Colors.pink,
+                      foregroundColor: Colors.white,
+                      elevation: 15,
+                      shadowColor: Colors.pink,
+                      fixedSize: const Size(150, 40),
+                      shape: const StadiumBorder()),
+                )
+              ],
+            )),
+          ));
+        }
+      },
+    );
   }
 }
 
