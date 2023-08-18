@@ -7,7 +7,7 @@ import '../../../models/gif.dart';
 import 'package:money_formatter/money_formatter.dart';
 
 import '../menu/menu_header.dart';
-import '../listview/listview_detail.dart';
+import '../../../pages/facturas/facturaDetalle.dart';
 
 void main() => runApp(const Restfull());
 

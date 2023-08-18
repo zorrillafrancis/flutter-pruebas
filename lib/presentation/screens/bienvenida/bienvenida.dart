@@ -5,43 +5,36 @@ import 'package:flutter/material.dart';
 import 'package:mi_app_01/presentation/screens/listview/listview_2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Directory? rootDir;
-late String tempDir;
+String? userLogin;
 
 class Bienvenida extends StatefulWidget {
-  final String usuario;
-  final String password;
-
-  const Bienvenida({super.key, required this.usuario, required this.password});
+  const Bienvenida({super.key});
 
   @override
   State<Bienvenida> createState() => _BienvenidaState();
 }
 
 class _BienvenidaState extends State<Bienvenida> {
-  Empresa emp = Empresa('nombre', 'propietario', 500);
-
-  setData() async {
+  Future<String> getData() async {
     if (kDebugMode) {
       print('object');
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userName = prefs.getString('userName') ?? "";
 
-    prefs.setString('userName', widget.usuario);
-    prefs.setString('userPass', widget.password);
+    return userName;
   }
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
-    print(emp.nombre);
+    userLogin = await getData();
+    print(userLogin);
   }
 
   @override
   Widget build(BuildContext context) {
-    setData();
-
     return Scaffold(
         appBar: AppBar(
           title: const Text('Sx'),
@@ -58,11 +51,12 @@ class _BienvenidaState extends State<Bienvenida> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(height: 100),
-                const Padding(
-                  padding: EdgeInsets.all(8),
+                Padding(
+                  padding: const EdgeInsets.all(8),
                   child: Text(
-                    'Bienvenido',
-                    style: TextStyle(fontFamily: 'RobotoMono', fontSize: 20),
+                    'Bienvenido $userLogin',
+                    style:
+                        const TextStyle(fontFamily: 'RobotoMono', fontSize: 20),
                   ),
                 ),
                 const SizedBox(height: 150),

@@ -13,21 +13,7 @@ class _LoginState extends State<Login> {
   TextEditingController txtName = TextEditingController();
   TextEditingController txtPass = TextEditingController();
 
-  loadData(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userName = prefs.getString("userName") ?? '';
-    var userPass = prefs.getString("userPass") ?? '';
-
-    txtName.text = userName.toString();
-    txtPass.text = userPass.toString();
-
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (BuildContext context) {
-      return Bienvenida(usuario: txtName.text, password: txtPass.text);
-    }));
-  }
-
-  getData() async {
+  Future<String?> getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userName = prefs.getString("userName") ?? '';
 
@@ -39,13 +25,12 @@ class _LoginState extends State<Login> {
     return FutureBuilder<String?>(
       future: getData(),
       builder: (context, snapshot) {
-        print(snapshot.data);
         if (snapshot.data == null) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.data != '') {
-          return Bienvenida(usuario: "", password: "");
+          return Bienvenida();
         } else {
           return Scaffold(
               body: Container(
@@ -69,11 +54,14 @@ class _LoginState extends State<Login> {
                   label: const Text('Entrar'),
                   icon: const Icon(Icons.login),
                   onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return Bienvenida(
-                          usuario: txtName.text, password: txtPass.text);
-                    }));
+                    loginRedirect(txtName.text).then((value) {
+                      if (value == true) {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return const Bienvenida();
+                        }));
+                      }
+                    });
                     //Navigator.pushNamed(context, '/listview_2');
                   },
                   style: ElevatedButton.styleFrom(
@@ -117,4 +105,15 @@ Widget password(TextEditingController txtPass) {
           hintText: 'Password', fillColor: Colors.white, filled: true),
     ),
   );
+}
+
+Future<bool> loginRedirect(String user) async {
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setString('userName', user);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }

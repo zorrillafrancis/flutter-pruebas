@@ -6,8 +6,9 @@ import 'package:mi_app_01/card/profilepage.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_bottom.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_header.dart';
 import 'package:http/http.dart' as http;
-import '../../../models/gif.dart';
-import '../../../utils/utils.dart';
+import '../../models/facturasListadoModel.dart';
+import '../../models/gif.dart';
+import '../../utils/utils.dart';
 
 class Details extends StatefulWidget {
   final String numeroFactura;
@@ -24,37 +25,36 @@ class _DetailsState extends State<Details> {
   String url = "";
   int _selectedIndex = 0;
 
-  Future<List<Datum>> getGifs() async {
-    Gif? list;
-    List<Datum>? listDatum = [];
+  Future<List<Value>> loadData() async {
+    List<Value> listaData = [];
 
     String url =
-        "https://api.giphy.com/v1/gifs/trending?api_key=K7Ear4ZUaTO32x0OdsI181JV1iQqAmro&limit=25&offset=0&rating=g&bundle=messaging_non_clips";
+        "https://uniformes.schoolsolutionscrm.com/api/Facturas?GetById=92588";
 
-    final response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
 
     if (response.statusCode == 200) {
       try {
         String body = utf8.decode(response.bodyBytes);
         var jsonData = json.decode(body);
-        list = Gif.fromJson(jsonData);
 
-        for (Datum item in list.data) {
-          listDatum.add(item);
-          print(item);
+        for (dynamic item in jsonData['value']) {
+          Value m = Value.fromJson(item);
+          listaData.add(m);
         }
       } catch (e) {
         print(e);
       }
     }
 
-    return listDatum;
+    return listaData;
   }
 
   @override
   void initState() {
     super.initState();
-    listadoGifs = getGifs();
   }
 
   void onItemTapped(int index) {
@@ -65,6 +65,9 @@ class _DetailsState extends State<Details> {
 
   @override
   Widget build(BuildContext context) {
+    final arg = ModalRoute.of(context)?.settings.arguments;
+    print(arg);
+
     return Scaffold(
         appBar: MenuHeader().getAppBar('Detalle de la Factura'),
         body: Column(

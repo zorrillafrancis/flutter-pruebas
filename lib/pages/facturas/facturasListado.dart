@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:mi_app_01/models/facturasListadoModel.dart';
 
 import '../../presentation/screens/api/restfull.dart';
-import '../../presentation/screens/listview/listview_detail.dart';
+import 'facturaDetalle.dart';
 import '../../presentation/screens/menu/menu_header.dart';
 
 Future<List<Value>>? listaData;
@@ -112,7 +112,7 @@ class _FacturasListadoState extends State<FacturasListado> {
                                         MaterialPageRoute(
                                           builder: (context) => Details(
                                               numeroFactura: snapshot
-                                                  .data![index].usuario
+                                                  .data![index].id
                                                   .toString()),
                                         ));
                                     /*    Navigator.pushNamed(

@@ -4,7 +4,7 @@ import 'package:mi_app_01/pages/facturas/facturasListado.dart';
 import 'package:mi_app_01/pages/mensaje_page.dart';
 import 'package:mi_app_01/presentation/screens/bienvenida/bienvenida.dart';
 import 'package:mi_app_01/presentation/screens/counters/login.dart';
-import 'package:mi_app_01/presentation/screens/listview/listview_detail.dart';
+import 'package:mi_app_01/pages/facturas/facturaDetalle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //AAAA3o67N9M:APA91bFJwoYv1zkyFXOCzdmDjbjuiBn4h8319RC8dgjq02W7syzb1YZC5wet2-tkkgwoWH_enTC9onXms0cP4KD6Niy9s5Qbu80LJ0s1ZNwVukpLpuCdgrAESWhDFF_CJm1v98aO39e7
@@ -89,9 +89,9 @@ class InitPage extends StatelessWidget {
       builder: (context, snapshot) {
         // while loading data
         print(snapshot.data);
-        if (snapshot.data == null) {
+        if (snapshot.data == null || snapshot.data == "") {
           print('loading...');
-          return CircularProgressIndicator();
+          return Login();
         }
         // if has error
         if (snapshot.hasError) {
@@ -104,8 +104,7 @@ class InitPage extends StatelessWidget {
         print(snapshot.data);
         if (snapshot.data != '') {
           print('In HomeScreen');
-          return Bienvenida(
-              usuario: snapshot.data.toString(), password: 'francis');
+          return const Bienvenida();
         }
         // not authenticated, go to auth screen
         print('In Authenicate or Login');
@@ -118,7 +117,7 @@ class InitPage extends StatelessWidget {
 Future<String?> loadData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  return prefs.getString("userName");
+  return prefs.getString("userName") ?? '';
 }
 
 /*
