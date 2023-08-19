@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mi_app_01/presentation/screens/listview/listview_2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-String? userLogin;
+String? userName;
 
 class Bienvenida extends StatefulWidget {
   const Bienvenida({super.key});
@@ -15,22 +15,19 @@ class Bienvenida extends StatefulWidget {
 }
 
 class _BienvenidaState extends State<Bienvenida> {
-  Future<String> getData() async {
+  getData() async {
     if (kDebugMode) {
       print('object');
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userName = prefs.getString('userName') ?? "";
-
-    return userName;
+    userName = prefs.getString('userName') ?? "";
   }
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
-    userLogin = await getData();
-    print(userLogin);
+    getData();
   }
 
   @override
@@ -54,7 +51,7 @@ class _BienvenidaState extends State<Bienvenida> {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text(
-                    'Bienvenido $userLogin',
+                    'Bienvenido $userName',
                     style:
                         const TextStyle(fontFamily: 'RobotoMono', fontSize: 20),
                   ),

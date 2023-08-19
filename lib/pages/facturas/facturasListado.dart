@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mi_app_01/models/facturasListadoModel.dart';
+import 'package:mi_app_01/utils/constants.dart';
 
 import '../../presentation/screens/api/restfull.dart';
 import 'facturaDetalle.dart';
@@ -22,8 +23,7 @@ class _FacturasListadoState extends State<FacturasListado> {
   Future<List<Value>> loadData() async {
     List<Value> listaData = [];
 
-    String url =
-        "https://uniformes.schoolsolutionscrm.com/api/Facturas?pkidEmpresa=1&isCliente=0";
+    String url = "${Environment.apiUrl}/Facturas?pkidEmpresa=1&isCliente=0";
 
     var body = {
       "numero_factura": "",

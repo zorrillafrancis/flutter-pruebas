@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 //AAAA3o67N9M:APA91bFJwoYv1zkyFXOCzdmDjbjuiBn4h8319RC8dgjq02W7syzb1YZC5wet2-tkkgwoWH_enTC9onXms0cP4KD6Niy9s5Qbu80LJ0s1ZNwVukpLpuCdgrAESWhDFF_CJm1v98aO39e7
 final GlobalKey<NavigatorState> natigatorKey = GlobalKey<NavigatorState>();
 String? userNameVa = "";
+bool loggedIn = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,10 @@ void main() async {
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  userNameVa = prefs.getString("userName") ?? '';
+  if (prefs.getString('userName') != null &&
+      prefs.getString('userName') != '') {
+    loggedIn = true;
+  }
 
   runApp(const MyApp());
 }
@@ -67,7 +71,11 @@ class _MyAppState extends State<MyApp> {
       initialRoute: 'home',
       routes: {
         'home': ((context) {
-          return InitPage();
+          if (loggedIn == false) {
+            return const Login();
+          } else {
+            return const Bienvenida();
+          }
         }),
         'mensaje': ((context) => const MensajePage()),
         'facturaListado': ((context) => const FacturasListado()),
@@ -79,46 +87,7 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class InitPage extends StatelessWidget {
-  const InitPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<String?>(
-      future: loadData(),
-      builder: (context, snapshot) {
-        // while loading data
-        print(snapshot.data);
-        if (snapshot.data == null || snapshot.data == "") {
-          print('loading...');
-          return Login();
-        }
-        // if has error
-        if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        // retrieve data - check for authentication
-
-        // authenticated, go to homescreen
-        print('validar data');
-        print(snapshot.data);
-        if (snapshot.data != '') {
-          print('In HomeScreen');
-          return const Bienvenida();
-        }
-        // not authenticated, go to auth screen
-        print('In Authenicate or Login');
-        return Login();
-      },
-    );
-  }
-}
-
-Future<String?> loadData() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  return prefs.getString("userName") ?? '';
-}
 
 /*
 class _WrapperState extends State<Wrapper> {

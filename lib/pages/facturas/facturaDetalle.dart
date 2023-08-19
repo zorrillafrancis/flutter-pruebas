@@ -6,6 +6,7 @@ import 'package:mi_app_01/card/profilepage.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_bottom.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_header.dart';
 import 'package:http/http.dart' as http;
+import 'package:mi_app_01/utils/constants.dart';
 import '../../models/facturasListadoModel.dart';
 import '../../models/gif.dart';
 import '../../utils/utils.dart';
@@ -28,12 +29,9 @@ class _DetailsState extends State<Details> {
   Future<List<Value>> loadData() async {
     List<Value> listaData = [];
 
-    String url =
-        "https://uniformes.schoolsolutionscrm.com/api/Facturas?GetById=92588";
+    String url = "${Environment.apiUrl}/Facturas/GetById?id=92588";
 
-    final response = await http.get(Uri.parse(url), headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       try {
@@ -55,6 +53,7 @@ class _DetailsState extends State<Details> {
   @override
   void initState() {
     super.initState();
+    loadData();
   }
 
   void onItemTapped(int index) {
