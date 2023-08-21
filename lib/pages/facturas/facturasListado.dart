@@ -101,62 +101,84 @@ class _FacturasListadoState extends State<FacturasListado> {
                           shrinkWrap: true,
                           itemCount: 10,
                           itemBuilder: (context, index) {
-                            return Card(
-                              margin: EdgeInsets.all(8.0),
-                              elevation: 0.5,
-                              child: ListTile(
-                                  onTap: () {
-                                    print('click');
-                                    print(snapshot.data![index].id);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Details(
-                                              facturaId:
-                                                  snapshot.data![index].id),
-                                        ));
-                                    /*    Navigator.pushNamed(
+                            return Dismissible(
+                              key: Key(snapshot.data![index].id.toString()),
+                              background: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                decoration: const BoxDecoration(
+                                    color: Colors.blueAccent),
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: const Icon(
+                                          Icons.print,
+                                          color: Colors.white,
+                                        ))
+                                  ],
+                                ),
+                              ),
+                              child: Card(
+                                margin: EdgeInsets.all(8.0),
+                                elevation: 0.5,
+                                child: ListTile(
+                                    onTap: () {
+                                      print('click');
+                                      print(snapshot.data![index].id);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                facturaId:
+                                                    snapshot.data![index].id),
+                                          ));
+                                      /*    Navigator.pushNamed(
                                         context, 'facturaDetalle',
                                         arguments: 48);*/
-                                  },
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 2, horizontal: 10),
-                                  visualDensity:
-                                      const VisualDensity(vertical: 1),
-                                  leading: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(snapshot.data![index].numeroFactura
-                                          .toString())
-                                    ],
-                                  ),
-                                  title: Text(
-                                    snapshot.data![index].nombre.toString(),
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          getDate(snapshot.data![index].fecha)),
-                                      Text(
-                                        snapshot.data![index].usuario
-                                            .toString(),
+                                    },
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 2, horizontal: 10),
+                                    visualDensity:
+                                        const VisualDensity(vertical: 1),
+                                    leading: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(snapshot.data![index].numeroFactura
+                                            .toString())
+                                      ],
+                                    ),
+                                    title: Text(
+                                      snapshot.data![index].nombre.toString(),
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(getDate(
+                                            snapshot.data![index].fecha)),
+                                        Text(
+                                          snapshot.data![index].usuario
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Text(
+                                        getCurrency(
+                                            snapshot.data![index].total ?? 0),
                                         style: const TextStyle(
-                                            fontSize: 12,
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ],
-                                  ),
-                                  trailing: Text(
-                                      getCurrency(
-                                          snapshot.data![index].total ?? 0),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500)),
-                                  enabled: snapshot.data![index].pkidestatus
-                                          .toString() !=
-                                      ""),
+                                            fontWeight: FontWeight.w500)),
+                                    enabled: snapshot.data![index].pkidestatus
+                                            .toString() !=
+                                        ""),
+                              ),
+                              onDismissed: (value) {},
                             );
                           });
                     }

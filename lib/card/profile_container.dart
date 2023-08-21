@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../models/facturasDetalleModel.dart';
+import '../utils/utils.dart';
 
 class ProfileContainer extends StatelessWidget {
   final Header? header;
 
   const ProfileContainer({super.key, required this.header});
-
   @override
   Widget build(BuildContext context) {
+    Util util = Util();
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 25.0),
@@ -59,7 +60,7 @@ class ProfileContainer extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          "12/01/2023",
+                          util.formatDate(header!.fecha),
                           style: const TextStyle(color: Colors.white),
                         )
                       ],
@@ -74,7 +75,7 @@ class ProfileContainer extends StatelessWidget {
                                 size: 15,
                                 color: Colors.white,
                               ),
-                              Text("GALILEA CREATIVO",
+                              Text(header!.cliente.cliente,
                                   maxLines: 2,
                                   overflow: TextOverflow.clip,
                                   style: TextStyle(
@@ -104,8 +105,7 @@ class ProfileContainer extends StatelessWidget {
                           size: 15,
                           color: Colors.white,
                         ),
-                        Text(
-                          "ALVIS PHILLIPS",
+                        Text(header!.cliente.nombre,
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
@@ -121,8 +121,7 @@ class ProfileContainer extends StatelessWidget {
                           size: 15,
                           color: Colors.white,
                         ),
-                        Text(
-                          "809-901-4419",
+                        Text(header!.cliente.telefono,
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,

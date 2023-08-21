@@ -8,6 +8,7 @@ import 'package:mi_app_01/presentation/screens/menu/menu_bottom.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_header.dart';
 import 'package:http/http.dart' as http;
 import 'package:mi_app_01/utils/constants.dart';
+import '../../components/total.dart';
 import '../../models/facturasListadoModel.dart';
 import '../../models/gif.dart';
 import '../../utils/utils.dart';
@@ -101,8 +102,8 @@ class _DetailsState extends State<Details> {
                                         header: inheader,
                                       )),
                                 if (index == 0)
-                                  Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                  const Padding(
+                                      padding: EdgeInsets.all(8.0),
                                       child: ProfilePage(
                                         text: 'enviado a ',
                                       )),
@@ -133,8 +134,26 @@ class _DetailsState extends State<Details> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                              "${snapshot.data![index].cantidad} x ${util.getCurrency(snapshot.data![index].preciounitario ?? 0, false)}"),
+                                          Text.rich(TextSpan(
+                                              text: util.getCurrency(
+                                                  snapshot.data![index]
+                                                          .preciounitario ??
+                                                      0,
+                                                  false),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12,
+                                                  color: Colors.blueAccent),
+                                              children: [
+                                                TextSpan(
+                                                    text:
+                                                        " x ${snapshot.data![index].cantidad}",
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.normal))
+                                              ])),
                                           if (snapshot.data![index].descuento!
                                                   .toDouble() >
                                               0)
@@ -178,7 +197,7 @@ class _DetailsState extends State<Details> {
             ),
           ],
         ),
-        bottomNavigationBar: menuBottomBar());
+        bottomNavigationBar: const TotalWidget());
   }
 
   BottomNavigationBar menuBottomBar() {
