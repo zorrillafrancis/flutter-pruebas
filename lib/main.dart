@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
         'mensaje': ((context) => const MensajePage()),
         'facturaListado': ((context) => const FacturasListado()),
         'facturaDetalle': ((context) => const Details(
-              numeroFactura: "",
+              facturaId: 0,
             )),
       },
     );

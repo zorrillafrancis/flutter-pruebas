@@ -2,11 +2,11 @@ import 'package:intl/intl.dart';
 import 'package:money_formatter/money_formatter.dart';
 
 class Util {
-  String getCurrency(double value) {
+  String getCurrency(double value, [bool symbol = true]) {
     MoneyFormatter fmf = MoneyFormatter(
         amount: value,
         settings: MoneyFormatterSettings(
-            symbol: 'RD\$',
+            symbol: (symbol == true ? 'RD\$' : ''),
             thousandSeparator: ',',
             decimalSeparator: '.',
             symbolAndNumberSeparator: '',
@@ -22,5 +22,3 @@ class Util {
     return formattedDate;
   }
 }
-
-

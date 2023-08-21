@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/card/profile_container.dart';
+import 'package:mi_app_01/models/facturasDetalleModel.dart';
 
 class ProfilePage extends StatelessWidget {
   final String text;

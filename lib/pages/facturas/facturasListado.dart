@@ -107,13 +107,13 @@ class _FacturasListadoState extends State<FacturasListado> {
                               child: ListTile(
                                   onTap: () {
                                     print('click');
+                                    print(snapshot.data![index].id);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => Details(
-                                              numeroFactura: snapshot
-                                                  .data![index].id
-                                                  .toString()),
+                                              facturaId:
+                                                  snapshot.data![index].id),
                                         ));
                                     /*    Navigator.pushNamed(
                                         context, 'facturaDetalle',

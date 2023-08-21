@@ -182,14 +182,7 @@ class _MyWidgetState extends State<Listview2>
                         elevation: 0.4,
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: ListTile(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Details(numeroFactura: ''),
-                                ));
-                          },
+                          onTap: () {},
                           visualDensity: const VisualDensity(vertical: 1),
                           leading: CircleAvatar(
                               backgroundColor: const Color(0xff764abc),

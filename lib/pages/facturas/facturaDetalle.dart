@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/card/profile_container.dart';
 import 'package:mi_app_01/card/profilepage.dart';
+import 'package:mi_app_01/models/facturasDetalleModel.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_bottom.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_header.dart';
 import 'package:http/http.dart' as http;
@@ -11,10 +12,14 @@ import '../../models/facturasListadoModel.dart';
 import '../../models/gif.dart';
 import '../../utils/utils.dart';
 
-class Details extends StatefulWidget {
-  final String numeroFactura;
+Future<List<Detalle>>? listaData;
+int listaDataTotal = 0;
+Header? inheader;
 
-  const Details({super.key, required this.numeroFactura});
+class Details extends StatefulWidget {
+  final int facturaId;
+
+  const Details({super.key, required this.facturaId});
 
   @override
   State<Details> createState() => _DetailsState();
@@ -22,14 +27,14 @@ class Details extends StatefulWidget {
 
 class _DetailsState extends State<Details> {
   Util util = Util();
-  Future<List<Datum>>? listadoGifs;
+  Future<List<Detalle>>? detalleLista;
   String url = "";
   int _selectedIndex = 0;
 
-  Future<List<Value>> loadData() async {
-    List<Value> listaData = [];
-
-    String url = "${Environment.apiUrl}/Facturas/GetById?id=92588";
+  Future<List<Detalle>> loadData() async {
+    List<Detalle> list = [];
+    String url =
+        "${Environment.apiUrl}/Facturas/GetDetalleById?id=${widget.facturaId}";
 
     final response = await http.get(Uri.parse(url));
 
@@ -37,23 +42,23 @@ class _DetailsState extends State<Details> {
       try {
         String body = utf8.decode(response.bodyBytes);
         var jsonData = json.decode(body);
+        var data = jsonData['value'];
 
-        for (dynamic item in jsonData['value']) {
-          Value m = Value.fromJson(item);
-          listaData.add(m);
-        }
+        inheader = Header.fromJson(data['header']);
+        list =
+            List<Detalle>.from(data['detalle'].map((x) => Detalle.fromJson(x)));
       } catch (e) {
         print(e);
       }
     }
 
-    return listaData;
+    listaDataTotal = list.length;
+    return list;
   }
 
   @override
   void initState() {
     super.initState();
-    loadData();
   }
 
   void onItemTapped(int index) {
@@ -64,8 +69,7 @@ class _DetailsState extends State<Details> {
 
   @override
   Widget build(BuildContext context) {
-    final arg = ModalRoute.of(context)?.settings.arguments;
-    print(arg);
+    print(widget.facturaId);
 
     return Scaffold(
         appBar: MenuHeader().getAppBar('Detalle de la Factura'),
@@ -76,9 +80,9 @@ class _DetailsState extends State<Details> {
             ),
             Expanded(
               child: FutureBuilder(
-                  future: listadoGifs,
+                  future: loadData(),
                   builder: (BuildContext context,
-                      AsyncSnapshot<List<Datum>> snapshot) {
+                      AsyncSnapshot<List<Detalle>> snapshot) {
                     if (snapshot.data == null) {
                       return const Center(
                         child: CircularProgressIndicator(),
@@ -86,14 +90,16 @@ class _DetailsState extends State<Details> {
                     } else {
                       return ListView.builder(
                           shrinkWrap: true,
-                          itemCount: 10,
+                          itemCount: listaDataTotal,
                           itemBuilder: (context, index) {
                             return Column(
                               children: [
                                 if (index == 0)
                                   Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: ProfileContainer()),
+                                      child: ProfileContainer(
+                                        header: inheader,
+                                      )),
                                 if (index == 0)
                                   Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -104,28 +110,22 @@ class _DetailsState extends State<Details> {
                                   margin: const EdgeInsets.all(8.0),
                                   elevation: 0.5,
                                   child: ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => Details(
-                                                  numeroFactura: snapshot
-                                                      .data![index].username
-                                                      .toString()),
-                                            ));
-                                      },
+                                      onTap: () {},
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               vertical: 2, horizontal: 10),
                                       visualDensity:
                                           const VisualDensity(vertical: 1),
-                                      leading: const Column(
+                                      leading: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        children: [Text('78547')],
+                                        children: [
+                                          Text(snapshot.data![index].codigo
+                                              .toString())
+                                        ],
                                       ),
                                       title: Text(
-                                        snapshot.data![index].title.toString(),
+                                        snapshot.data![index].descripcion,
                                         style: const TextStyle(
                                             color: Colors.black),
                                       ),
@@ -133,24 +133,42 @@ class _DetailsState extends State<Details> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(util.formatDate(snapshot
-                                              .data![index].importDatetime)),
                                           Text(
-                                            snapshot.data![index].username
-                                                .toString(),
-                                            style: const TextStyle(
-                                                fontSize: 12,
-                                                fontStyle: FontStyle.italic),
-                                          ),
+                                              "${snapshot.data![index].cantidad} x ${util.getCurrency(snapshot.data![index].preciounitario ?? 0, false)}"),
+                                          if (snapshot.data![index].descuento!
+                                                  .toDouble() >
+                                              0)
+                                            Text(
+                                              "-${util.getCurrency(snapshot.data![index].descuento ?? 0, false)}",
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontStyle: FontStyle.italic),
+                                            )
                                         ],
                                       ),
-                                      trailing: Text(
-                                          util.getCurrency(2000).toString(),
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w500)),
-                                      enabled: snapshot.data![index].username
-                                              .toString() !=
-                                          ""),
+                                      trailing: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                              util
+                                                  .getCurrency(snapshot
+                                                          .data![index]
+                                                          .subtotal ??
+                                                      0)
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w500)),
+                                          if (snapshot.data![index].itebis! > 0)
+                                            Text(
+                                              'Itbis${util.getCurrency(snapshot.data![index].itebis ?? 0, false)}',
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontStyle: FontStyle.italic),
+                                            )
+                                        ],
+                                      )),
                                 ),
                               ],
                             );

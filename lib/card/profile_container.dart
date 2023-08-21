@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../models/facturasDetalleModel.dart';
+
 class ProfileContainer extends StatelessWidget {
+  final Header? header;
+
+  const ProfileContainer({super.key, required this.header});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,7 +54,7 @@ class ProfileContainer extends StatelessWidget {
                               size: 15,
                               color: Colors.white,
                             ),
-                            Text("20191",
+                            Text(header!.numeroFactura.toString(),
                                 style: TextStyle(color: Colors.white)),
                           ],
                         ),

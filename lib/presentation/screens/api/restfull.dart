@@ -111,16 +111,7 @@ class _RestfullState extends State<Restfull> {
                                 margin: EdgeInsets.all(8.0),
                                 elevation: 0.5,
                                 child: ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Details(
-                                                numeroFactura: snapshot
-                                                    .data![index].username
-                                                    .toString()),
-                                          ));
-                                    },
+                                    onTap: () {},
                                     contentPadding: const EdgeInsets.symmetric(
                                         vertical: 2, horizontal: 10),
                                     visualDensity:
