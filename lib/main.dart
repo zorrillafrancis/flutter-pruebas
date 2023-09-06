@@ -5,6 +5,8 @@ import 'package:mi_app_01/pages/mensaje_page.dart';
 import 'package:mi_app_01/presentation/screens/bienvenida/bienvenida.dart';
 import 'package:mi_app_01/presentation/screens/counters/login.dart';
 import 'package:mi_app_01/pages/facturas/facturaDetalle.dart';
+import 'package:mi_app_01/src/provider/chatProvider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //AAAA3o67N9M:APA91bFJwoYv1zkyFXOCzdmDjbjuiBn4h8319RC8dgjq02W7syzb1YZC5wet2-tkkgwoWH_enTC9onXms0cP4KD6Niy9s5Qbu80LJ0s1ZNwVukpLpuCdgrAESWhDFF_CJm1v98aO39e7
@@ -64,25 +66,32 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      navigatorKey: natigatorKey,
-      title: 'Material App',
-      initialRoute: 'home',
-      routes: {
-        'home': ((context) {
-          if (loggedIn == false) {
-            return const Login();
-          } else {
-            return const Bienvenida();
-          }
-        }),
-        'mensaje': ((context) => const MensajePage()),
-        'facturaListado': ((context) => const FacturasListado()),
-        'facturaDetalle': ((context) => const Details(
-              facturaId: 0,
-            )),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (_) =>
+                TotalsProvider(total: 0, subtotal: 0, itbis: 0, descuento: 0))
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        navigatorKey: natigatorKey,
+        title: 'Material App',
+        initialRoute: 'home',
+        routes: {
+          'home': ((context) {
+            if (loggedIn == false) {
+              return const Login();
+            } else {
+              return const Bienvenida();
+            }
+          }),
+          'mensaje': ((context) => const MensajePage()),
+          'facturaListado': ((context) => const FacturasListado()),
+          'facturaDetalle': ((context) => const Details(
+                facturaId: 0,
+              )),
+        },
+      ),
     );
   }
 }

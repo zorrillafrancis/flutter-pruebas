@@ -13,7 +13,6 @@ import '../../models/facturasListadoModel.dart';
 import '../../models/gif.dart';
 import '../../utils/utils.dart';
 
-Future<List<Detalle>>? listaData;
 int listaDataTotal = 0;
 Header? inheader;
 
@@ -31,8 +30,9 @@ class _DetailsState extends State<Details> {
   Future<List<Detalle>>? detalleLista;
   String url = "";
   int _selectedIndex = 0;
+  int total = 0;
 
-  Future<List<Detalle>> loadData() async {
+  Future<List<Detalle>>? loadData() async {
     List<Detalle> list = [];
     String url =
         "${Environment.apiUrl}/Facturas/GetDetalleById?id=${widget.facturaId}";
@@ -60,6 +60,8 @@ class _DetailsState extends State<Details> {
   @override
   void initState() {
     super.initState();
+    detalleLista = loadData();
+    
   }
 
   void onItemTapped(int index) {
@@ -81,7 +83,7 @@ class _DetailsState extends State<Details> {
             ),
             Expanded(
               child: FutureBuilder(
-                  future: loadData(),
+                  future: detalleLista,
                   builder: (BuildContext context,
                       AsyncSnapshot<List<Detalle>> snapshot) {
                     if (snapshot.data == null) {
@@ -133,7 +135,7 @@ class _DetailsState extends State<Details> {
                                       subtitle: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        children: [
+                                        children: [                                          
                                           Text.rich(TextSpan(
                                               text: util.getCurrency(
                                                   snapshot.data![index]
@@ -163,6 +165,7 @@ class _DetailsState extends State<Details> {
                                                   fontSize: 12,
                                                   fontStyle: FontStyle.italic),
                                             )
+                                            
                                         ],
                                       ),
                                       trailing: Column(
@@ -197,7 +200,9 @@ class _DetailsState extends State<Details> {
             ),
           ],
         ),
-        bottomNavigationBar: const TotalWidget());
+        bottomNavigationBar: TotalWidget(
+          valor: total,
+        ));
   }
 
   BottomNavigationBar menuBottomBar() {

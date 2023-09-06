@@ -1,14 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mi_app_01/models/facturasDetalleModel.dart';
+import 'package:mi_app_01/pages/facturas/facturaDetalle.dart';
 import 'package:mi_app_01/size_config.dart';
+import 'package:mi_app_01/src/provider/chatProvider.dart';
+import 'package:provider/provider.dart';
 
-class TotalWidget extends StatelessWidget {
-  const TotalWidget({
-    super.key,
-  });
+int value = 100;
+
+class TotalWidget extends StatefulWidget {
+  final int valor;
+
+  const TotalWidget({super.key, required this.valor});
+
+  @override
+  State<TotalWidget> createState() => _TotalWidgetState();
+}
+
+class _TotalWidgetState extends State<TotalWidget> {
+  @override
+  void initState() {
+    super.initState();
+    print(widget.valor);
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
         height: 120,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -48,7 +66,7 @@ class TotalWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('Sub-Total'),
-                            Text('data'),
+                            Text(widget.valor.toString()),
                           ],
                         ),
                         Row(
