@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 int value = 100;
 
 class TotalWidget extends StatefulWidget {
-  final int valor;
+  final double? valor;
 
   const TotalWidget({super.key, required this.valor});
 
@@ -26,7 +26,6 @@ class _TotalWidgetState extends State<TotalWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
         height: 120,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),

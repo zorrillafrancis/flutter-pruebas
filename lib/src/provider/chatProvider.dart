@@ -39,11 +39,12 @@ class TotalsProvider with ChangeNotifier {
       this.descuento});
 
   void add(double total, double subtotal, double? itbis, double? descuento) {
-    total = total;
+    total += total;
     subtotal = subtotal;
     itbis = itbis;
     descuento = descuento;
-
+    print('====== total ======');
+    print(total);
     notifyListeners();
   }
 }

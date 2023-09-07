@@ -11,6 +11,7 @@ import 'package:mi_app_01/utils/constants.dart';
 import '../../components/total.dart';
 import '../../models/facturasListadoModel.dart';
 import '../../models/gif.dart';
+import '../../src/provider/chatProvider.dart';
 import '../../utils/utils.dart';
 
 int listaDataTotal = 0;
@@ -30,7 +31,8 @@ class _DetailsState extends State<Details> {
   Future<List<Detalle>>? detalleLista;
   String url = "";
   int _selectedIndex = 0;
-  int total = 0;
+  double? total = 0;
+  var totals = TotalsProvider(subtotal: 0, total: 0);
 
   Future<List<Detalle>>? loadData() async {
     List<Detalle> list = [];
@@ -61,7 +63,23 @@ class _DetailsState extends State<Details> {
   void initState() {
     super.initState();
     detalleLista = loadData();
-    
+
+    detalleLista!.then(
+      (res) {
+        print('===== 69 ====');
+        double values = 0;
+
+        for (Detalle item in res) {
+          if (item.subtotal != null) {
+            values += (item.subtotal ?? 0);
+          }
+        }
+
+        setState(() {
+          total = values;
+        });
+      },
+    );
   }
 
   void onItemTapped(int index) {
@@ -135,7 +153,7 @@ class _DetailsState extends State<Details> {
                                       subtitle: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        children: [                                          
+                                        children: [
                                           Text.rich(TextSpan(
                                               text: util.getCurrency(
                                                   snapshot.data![index]
@@ -165,7 +183,6 @@ class _DetailsState extends State<Details> {
                                                   fontSize: 12,
                                                   fontStyle: FontStyle.italic),
                                             )
-                                            
                                         ],
                                       ),
                                       trailing: Column(
