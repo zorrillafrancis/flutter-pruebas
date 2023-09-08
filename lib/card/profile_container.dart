@@ -76,8 +76,8 @@ class ProfileContainer extends StatelessWidget {
                                 color: Colors.white,
                               ),
                               Text(header!.cliente.cliente,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.clip,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: Colors.white)),

@@ -35,48 +35,33 @@ class _TotalWidgetState extends State<TotalWidget> {
               blurRadius: 20,
               color: Color(0xFFDADADA).withOpacity(0.15))
         ]),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Row(
           children: [
-            Row(
-              children: [
-                Container(
-                  height: 60,
-                  width: 120,
-                  alignment: Alignment.center,
+            SizedBox(
+                height: 50,
+                width: 100,
+                child: Container(
+                  padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(
-                    'Total',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Colors.white),
-                  ),
-                ),
-                Spacer(),
-                Container(
-                    height: 100,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Sub-Total'),
-                            Text(widget.valor.toString()),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text('data'),
-                            Text('data'),
-                          ],
-                        ),
-                      ],
-                    )),
-              ],
+                      color: Color(0xFFF5F6F9),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Text('1,200.00'),
+                )),
+            Spacer(),
+            Container(
+              height: 60,
+              width: 200,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Text(
+                "RD25,000.00",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                    color: Colors.white),
+              ),
             ),
           ],
         ));

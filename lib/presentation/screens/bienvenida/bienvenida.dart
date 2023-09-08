@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../src/provider/chatProvider.dart';
 import '../../../utils/message.dart';
+import 'banner_bienvenida.dart';
 
 String? userName;
 
@@ -41,6 +42,8 @@ class _BienvenidaState extends State<Bienvenida> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Sx'),
@@ -56,67 +59,60 @@ class _BienvenidaState extends State<Bienvenida> {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 100),
+                const SizedBox(height: 50),
+                banner_bienvenida(width: width),
+                const SizedBox(height: 20),
+                Categories(),
+                const SizedBox(height: 50),
                 Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        'Bienvenido $userName',
-                        style: const TextStyle(
-                            fontFamily: 'RobotoMono', fontSize: 20),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 100),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                  SizedBox(
-                      width: 160, // <-- Your width
-                      height: 100, // <-- Your height
-                      child: ElevatedButton.icon(
-                        label: const Text('Facturas'),
-                        icon: const Icon(Icons.receipt),
-                        onPressed: () {
-                          /*  Navigator.of(context).push(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          width: 160, // <-- Your width
+                          height: 100, // <-- Your height
+                          child: ElevatedButton.icon(
+                            label: const Text('Facturas'),
+                            icon: const Icon(Icons.receipt),
+                            onPressed: () {
+                              /*  Navigator.of(context).push(
                         MaterialPageRoute(builder: (BuildContext context) {
                       return const Listview2();
                     }));*/
-                          Navigator.pushNamed(context, 'facturaListado');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          backgroundColor: Colors.lightBlue,
-                          foregroundColor: Colors.white,
-                          elevation: 8,
-                          shadowColor: Colors.lightBlue,
-                          fixedSize: const Size(170, 40),
-                        ),
-                      )),
-                  const SizedBox(width: 15),
-                  SizedBox(
-                      width: 160, // <-- Your width
-                      height: 100, // <-- Your height
-                      child: ElevatedButton.icon(
-                        label: const Text('Usuarios'),
-                        icon: const Icon(Icons.person),
-                        onPressed: () {
-                          print('===== Usuarios =====');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          backgroundColor: Colors.pink,
-                          foregroundColor: Colors.white,
-                          elevation: 8,
-                          shadowColor: Colors.pink,
-                          fixedSize: const Size(170, 40),
-                        ),
-                      )),
-                ]),
+                              Navigator.pushNamed(context, 'facturaListado');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              backgroundColor: Colors.lightBlue,
+                              foregroundColor: Colors.white,
+                              elevation: 8,
+                              shadowColor: Colors.lightBlue,
+                              fixedSize: const Size(170, 40),
+                            ),
+                          )),
+                      const SizedBox(width: 15),
+                      SizedBox(
+                          width: 160, // <-- Your width
+                          height: 100, // <-- Your height
+                          child: ElevatedButton.icon(
+                            label: const Text('Usuarios'),
+                            icon: const Icon(Icons.person),
+                            onPressed: () {
+                              print('===== Usuarios =====');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              backgroundColor: Colors.pink,
+                              foregroundColor: Colors.white,
+                              elevation: 8,
+                              shadowColor: Colors.pink,
+                              fixedSize: const Size(170, 40),
+                            ),
+                          )),
+                    ]),
                 const SizedBox(height: 50),
                 SizedBox(
                     width: 160, // <-- Your width
@@ -142,10 +138,75 @@ class _BienvenidaState extends State<Bienvenida> {
   }
 }
 
-class Empresa {
-  String nombre = "";
-  String propietario = "";
-  int ingreso = 0;
+class Categories extends StatelessWidget {
+  const Categories({
+    super.key,
+  });
 
-  Empresa(String nombre, String propietario, int ingreso);
+  @override
+  Widget build(BuildContext context) {
+    List<Map<String, dynamic>> categories = [
+      {"icon": "assets/icons/Flash Icon.svg", "text": "Game"},
+      {"icon": "assets/icons/Bill Icon.svg", "text": "Bill"},
+      {"icon": "assets/icons/Game Icon.svg", "text": "Game"},
+      {"icon": "assets/icons/Gift Icon.svg", "text": "Daily Gift"},
+      {"icon": "assets/icons/Discover.svg", "text": "More"},
+    ];
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ...List.generate(
+            categories.length,
+            (index) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CategoryCard(
+                    icon: categories[index]["icon"],
+                    text: categories[index]["text"],
+                    press: () {},
+                  ),
+                )),
+        SizedBox(
+          width: 10,
+        )
+      ],
+    );
+  }
+}
+
+class CategoryCard extends StatelessWidget {
+  final String icon, text;
+  final GestureTapCallback press;
+
+  const CategoryCard(
+      {super.key, required this.icon, required this.text, required this.press});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: press,
+      child: SizedBox(
+          width: 55,
+          child: Column(children: [
+            Container(
+              padding: EdgeInsets.all(5),
+              height: 55,
+              width: 55,
+              decoration: BoxDecoration(
+                  color: Color(0xFFFFECDF),
+                  borderRadius: BorderRadius.circular(10)),
+              child:
+                  IconButton(icon: const Icon(Icons.games), onPressed: () {}),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              text,
+              textAlign: TextAlign.center,
+            )
+          ])),
+    );
+  }
 }
