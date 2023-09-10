@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_app_01/presentation/screens/bienvenida/bienvenida.dart';
+import 'package:mi_app_01/pages/bienvenida/bienvenida.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool loggedIn = false;

@@ -2,13 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mi_app_01/presentation/screens/listview/listview_2.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../src/provider/chatProvider.dart';
-import '../../../utils/message.dart';
+import '../../src/provider/chatProvider.dart';
+import '../../utils/message.dart';
 import 'banner_bienvenida.dart';
+import 'catergories.dart';
 
 String? userName;
 
@@ -60,10 +62,10 @@ class _BienvenidaState extends State<Bienvenida> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(height: 50),
-                banner_bienvenida(width: width),
+                BannerBienvenida(width: width),
                 const SizedBox(height: 20),
-                Categories(),
-                const SizedBox(height: 50),
+                const Categories(),
+                const SizedBox(height: 20),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.max,
@@ -135,78 +137,5 @@ class _BienvenidaState extends State<Bienvenida> {
             ),
           ],
         ));
-  }
-}
-
-class Categories extends StatelessWidget {
-  const Categories({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    List<Map<String, dynamic>> categories = [
-      {"icon": "assets/icons/Flash Icon.svg", "text": "Game"},
-      {"icon": "assets/icons/Bill Icon.svg", "text": "Bill"},
-      {"icon": "assets/icons/Game Icon.svg", "text": "Game"},
-      {"icon": "assets/icons/Gift Icon.svg", "text": "Daily Gift"},
-      {"icon": "assets/icons/Discover.svg", "text": "More"},
-    ];
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ...List.generate(
-            categories.length,
-            (index) => Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CategoryCard(
-                    icon: categories[index]["icon"],
-                    text: categories[index]["text"],
-                    press: () {},
-                  ),
-                )),
-        SizedBox(
-          width: 10,
-        )
-      ],
-    );
-  }
-}
-
-class CategoryCard extends StatelessWidget {
-  final String icon, text;
-  final GestureTapCallback press;
-
-  const CategoryCard(
-      {super.key, required this.icon, required this.text, required this.press});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: press,
-      child: SizedBox(
-          width: 55,
-          child: Column(children: [
-            Container(
-              padding: EdgeInsets.all(5),
-              height: 55,
-              width: 55,
-              decoration: BoxDecoration(
-                  color: Color(0xFFFFECDF),
-                  borderRadius: BorderRadius.circular(10)),
-              child:
-                  IconButton(icon: const Icon(Icons.games), onPressed: () {}),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              text,
-              textAlign: TextAlign.center,
-            )
-          ])),
-    );
   }
 }

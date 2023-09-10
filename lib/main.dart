@@ -1,13 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mi_app_01/components/routs.dart';
 import 'package:mi_app_01/pages/facturas/facturasListado.dart';
-import 'package:mi_app_01/pages/mensaje_page.dart';
-import 'package:mi_app_01/presentation/screens/bienvenida/bienvenida.dart';
+import 'package:mi_app_01/pages/bienvenida/bienvenida.dart';
 import 'package:mi_app_01/presentation/screens/counters/login.dart';
 import 'package:mi_app_01/pages/facturas/facturaDetalle.dart';
 import 'package:mi_app_01/src/provider/chatProvider.dart';
+import 'package:mi_app_01/pages/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'components/theme.dart';
+import 'constants.dart';
 
 //AAAA3o67N9M:APA91bFJwoYv1zkyFXOCzdmDjbjuiBn4h8319RC8dgjq02W7syzb1YZC5wet2-tkkgwoWH_enTC9onXms0cP4KD6Niy9s5Qbu80LJ0s1ZNwVukpLpuCdgrAESWhDFF_CJm1v98aO39e7
 final GlobalKey<NavigatorState> natigatorKey = GlobalKey<NavigatorState>();
@@ -76,8 +80,10 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         navigatorKey: natigatorKey,
         title: 'Material App',
-        initialRoute: 'home',
-        routes: {
+        theme: getTheme(context),
+        initialRoute: SplashScreen.routeName,
+        routes: routes,
+        /*    routes: {
           'home': ((context) {
             if (loggedIn == false) {
               return const Login();
@@ -85,17 +91,15 @@ class _MyAppState extends State<MyApp> {
               return const Bienvenida();
             }
           }),
-          'mensaje': ((context) => const MensajePage()),
           'facturaListado': ((context) => const FacturasListado()),
           'facturaDetalle': ((context) => const Details(
                 facturaId: 0,
               )),
-        },
+        },*/
       ),
     );
   }
 }
-
 
 
 /*

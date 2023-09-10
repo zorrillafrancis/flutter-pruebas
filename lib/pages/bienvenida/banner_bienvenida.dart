@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class banner_bienvenida extends StatelessWidget {
-  const banner_bienvenida({
+class BannerBienvenida extends StatelessWidget {
+  const BannerBienvenida({
     super.key,
     required this.width,
   });
