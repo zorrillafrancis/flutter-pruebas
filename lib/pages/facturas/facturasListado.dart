@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mi_app_01/models/facturasListadoModel.dart';
+import 'package:mi_app_01/size_config.dart';
 import 'package:mi_app_01/utils/constants.dart';
 
+import '../../constants.dart';
 import '../../presentation/screens/api/restfull.dart';
 import 'facturaDetalle.dart';
 import '../../presentation/screens/menu/menu_header.dart';
@@ -13,6 +15,7 @@ import '../../presentation/screens/menu/menu_header.dart';
 Future<List<Value>>? listaData;
 
 class FacturasListado extends StatefulWidget {
+  static String routeName = "/facturaListado";
   const FacturasListado({super.key});
 
   @override
@@ -62,24 +65,30 @@ class _FacturasListadoState extends State<FacturasListado> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Material App',
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: MenuHeader().getAppBar('Facturas'),
-        body: Column(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: MenuHeader().getAppBar('Facturas'),
+      body: SafeArea(
+        child: Column(
           children: [
             Column(
               children: [
-                TextField(
-                  decoration: const InputDecoration(
-                      labelText: 'Buscar',
-                      suffixIcon: Icon(Icons.search),
-                      hintText: 'Buscar',
-                      fillColor: Color.fromARGB(31, 240, 234, 234),
-                      filled: true),
-                  onChanged: (text) {},
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: getProportionateScreenWidth(10),
+                      horizontal: getProportionateScreenWidth(10)),
+                  child: TextField(
+                      decoration: InputDecoration(
+                    labelText: 'Buscar',
+                    suffixIcon: const Icon(Icons.search),
+                    hintText: 'Buscar',
+                    fillColor: const Color.fromARGB(31, 240, 234, 234),
+                    filled: true,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(0),
+                        borderSide: const BorderSide(color: kTextColor),
+                        gapPadding: 1),
+                  )),
                 ),
               ],
             ),
@@ -134,8 +143,8 @@ class _FacturasListadoState extends State<FacturasListado> {
                                                     snapshot.data![index].id),
                                           ));
                                       /*    Navigator.pushNamed(
-                                        context, 'facturaDetalle',
-                                        arguments: 48);*/
+                                          context, 'facturaDetalle',
+                                          arguments: 48);*/
                                     },
                                     contentPadding: const EdgeInsets.symmetric(
                                         vertical: 2, horizontal: 10),

@@ -1,10 +1,16 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/components/splash_content.dart';
 import 'package:mi_app_01/constants.dart';
+import 'package:mi_app_01/pages/bienvenida/bienvenida.dart';
 import 'package:mi_app_01/pages/sign_in/sign_in_screen.dart';
 import 'package:mi_app_01/size_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'default_button.dart';
+
+bool loggedIn = false;
 
 class Body extends StatefulWidget {
   const Body({super.key});
@@ -29,6 +35,22 @@ class _BodyState extends State<Body> {
       "image": "lib/assets/images/splash_3.png"
     },
   ];
+
+  Future<void> isLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getString('userName') != null &&
+        prefs.getString('userName') != '') {
+      setState(() => loggedIn = true);
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isLogin();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +92,14 @@ class _BodyState extends State<Body> {
                         DefaultButton(
                           text: "Continuar",
                           press: () {
-                            Navigator.pushNamed(
-                                context, SignInScreen.routeName);
+                            print(loggedIn);
+                            if (loggedIn == false) {
+                              Navigator.pushNamed(
+                                  context, SignInScreen.routeName);
+                            } else {
+                              Navigator.pushNamed(
+                                  context, Bienvenida.routeName);
+                            }
                           },
                         ),
                         const Spacer(),

@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 class MenuHeader {
   getAppBar(title) {
     return AppBar(
-      title: Text(title),
+      title: Text(
+        title,
+        style: TextStyle(color: Colors.white),
+      ),
       centerTitle: true,
       backgroundColor: Colors.lightBlue,
       actions: [
@@ -14,16 +17,12 @@ class MenuHeader {
         }, itemBuilder: (BuildContext bc) {
           return const [
             PopupMenuItem(
-              value: '/hello',
-              child: Text("Hello"),
-            ),
-            PopupMenuItem(
               value: '/about',
-              child: Text("About"),
+              child: Text("Contacto"),
             ),
             PopupMenuItem(
               value: '/contact',
-              child: Text("Contact"),
+              child: Text("Acerca de"),
             )
           ];
         })
