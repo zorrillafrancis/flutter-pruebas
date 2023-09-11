@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/components/default_button.dart';
+import 'package:mi_app_01/pages/bienvenida/bienvenida.dart';
 import 'package:mi_app_01/size_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/social_card.dart';
 
 final List<String> errors = [];
@@ -54,9 +56,22 @@ class SingForm extends StatefulWidget {
 }
 
 class _SingFormState extends State<SingForm> {
+  TextEditingController txtUserName = TextEditingController();
+  TextEditingController txtPass = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String email = "";
   String clave = "";
+
+  Future<bool> saveLogin(String user) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      prefs.setString('userName', user);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +79,11 @@ class _SingFormState extends State<SingForm> {
         key: _formKey,
         child: Column(
           children: [
-            buildEmailFormField(),
+            buildEmailFormField(txtUserName),
             SizedBox(
               height: getProportionateScreenHeight(20),
             ),
-            buildPasswordFormField(),
+            buildPasswordFormField(txtPass),
             SizedBox(
               height: getProportionateScreenHeight(20),
             ),
@@ -81,6 +96,12 @@ class _SingFormState extends State<SingForm> {
                 press: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
+
+                    if (txtUserName.text != "") {
+                      saveLogin(txtUserName.text.toString()).then((value) {
+                        Navigator.pushNamed(context, Bienvenida.routeName);
+                      });
+                    }
                   }
                 }),
             SizedBox(
@@ -119,7 +140,7 @@ class _SingFormState extends State<SingForm> {
         ));
   }
 
-  TextFormField buildEmailFormField() {
+  TextFormField buildEmailFormField(TextEditingController txtUserName) {
     return TextFormField(
       onSaved: (newValue) => email = newValue.toString(),
       onChanged: (value) {
@@ -136,6 +157,7 @@ class _SingFormState extends State<SingForm> {
         }
         return null;
       },
+      controller: txtUserName,
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
           labelText: "Correo",
@@ -144,7 +166,7 @@ class _SingFormState extends State<SingForm> {
     );
   }
 
-  TextFormField buildPasswordFormField() {
+  TextFormField buildPasswordFormField(TextEditingController txtPass) {
     return TextFormField(
       onSaved: (newValue) => clave = newValue.toString(),
       onChanged: (value) {
@@ -163,6 +185,7 @@ class _SingFormState extends State<SingForm> {
         return null;
       },
       obscureText: true,
+      controller: txtPass,
       decoration: const InputDecoration(
           labelText: "Contraseña",
           hintText: "Agrega tu Contraseña",
