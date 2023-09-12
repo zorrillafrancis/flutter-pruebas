@@ -2,10 +2,10 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/components/splash_content.dart';
-import 'package:mi_app_01/constants.dart';
+import 'package:mi_app_01/utils/constants.dart';
 import 'package:mi_app_01/pages/bienvenida/bienvenida.dart';
 import 'package:mi_app_01/pages/sign_in/sign_in_screen.dart';
-import 'package:mi_app_01/size_config.dart';
+import 'package:mi_app_01/utils/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'default_button.dart';

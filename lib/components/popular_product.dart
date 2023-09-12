@@ -3,7 +3,7 @@ import 'package:mi_app_01/components/product_card.dart';
 import 'package:mi_app_01/components/section_title.dart';
 
 import '../models/productos.dart';
-import '../size_config.dart';
+import '../utils/size_config.dart';
 
 class PopularProducts extends StatelessWidget {
   @override

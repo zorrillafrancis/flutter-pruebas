@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_app_01/size_config.dart';
+import 'package:mi_app_01/utils/size_config.dart';
 
 import '../../models/facturasDetalleModel.dart';
 import '../../utils/utils.dart';

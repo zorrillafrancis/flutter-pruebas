@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants.dart';
+import '../utils/constants.dart';
 
 ThemeData getTheme(BuildContext context) {
   return ThemeData(
@@ -7,6 +7,7 @@ ThemeData getTheme(BuildContext context) {
       fontFamily: 'Muli',
       textTheme: textTheme(),
       visualDensity: VisualDensity.adaptivePlatformDensity,
+      colorSchemeSeed: const Color(0xff6750a4),
       brightness: Brightness.light,
       appBarTheme: appBarTheme(context),
       inputDecorationTheme: inputDecarationTheme());

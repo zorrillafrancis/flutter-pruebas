@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/pages/facturas/profile_container.dart';
-import 'package:mi_app_01/card/profilepage.dart';
+import 'package:mi_app_01/pages/facturas/profile_send_to.dart';
 import 'package:mi_app_01/models/facturasDetalleModel.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_header.dart';
 import 'package:http/http.dart' as http;
 import 'package:mi_app_01/utils/constants.dart';
 import 'total.dart';
-import '../../src/provider/chatProvider.dart';
 import '../../utils/utils.dart';
 
 int listaDataTotal = 0;
@@ -31,8 +30,6 @@ class _DetailsState extends State<Details> {
   double itbis = 0;
   double subtotal = 0;
   double descuento = 0;
-
-  var totals = TotalsProvider(subtotal: 0, total: 0);
 
   Future<List<Detalle>>? loadData() async {
     List<Detalle> list = [];
@@ -103,8 +100,6 @@ class _DetailsState extends State<Details> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.facturaId);
-
     return Scaffold(
         appBar: MenuHeader().getAppBar('Detalle de la Factura'),
         body: Column(
@@ -137,7 +132,7 @@ class _DetailsState extends State<Details> {
                                 if (index == 0)
                                   const Padding(
                                       padding: EdgeInsets.all(8.0),
-                                      child: ProfilePage(
+                                      child: ProfileSendTo(
                                         text: 'enviado a ',
                                       )),
                                 Card(
@@ -236,36 +231,6 @@ class _DetailsState extends State<Details> {
           itbis: itbis,
           descuento: descuento,
         ));
-  }
-
-  BottomNavigationBar menuBottomBar() {
-    return BottomNavigationBar(
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.home),
-          label: 'Home',
-          backgroundColor: Colors.blue[500],
-        ),
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.business),
-          label: 'Facturas',
-          backgroundColor: Colors.blue[500],
-        ),
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.school),
-          label: 'School',
-          backgroundColor: Colors.blue[500],
-        ),
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.settings),
-          label: 'Configuración',
-          backgroundColor: Colors.blue[500],
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: Colors.black,
-      onTap: onItemTapped,
-    );
   }
 }
 

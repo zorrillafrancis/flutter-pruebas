@@ -47,7 +47,7 @@ class TotalWidget extends StatelessWidget {
               width: 150,
               alignment: Alignment.center,
               child: const Text(
-                "Mostrar Detalle",
+                "Ver Detalle",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,

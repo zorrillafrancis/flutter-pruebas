@@ -2,12 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:mi_app_01/presentation/screens/menu/menu_bottom.dart';
 import '../../../models/gif.dart';
 import 'package:money_formatter/money_formatter.dart';
-
 import '../menu/menu_header.dart';
-import '../../../pages/facturas/facturaDetalle.dart';
 
 void main() => runApp(const Restfull());
 

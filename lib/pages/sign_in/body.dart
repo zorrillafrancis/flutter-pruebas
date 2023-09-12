@@ -2,17 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/components/default_button.dart';
+import 'package:mi_app_01/utils/constants.dart';
 import 'package:mi_app_01/models/userModel.dart';
 import 'package:mi_app_01/pages/bienvenida/bienvenida.dart';
-import 'package:mi_app_01/size_config.dart';
+import 'package:mi_app_01/utils/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/social_card.dart';
 import '../../utils/constants.dart';
 import 'package:http/http.dart' as http;
 
+import '../../utils/utils.dart';
+
 final List<String> errors = [];
 String errorTextEmail = "Por favor agrege su correo";
 String errorTextContrasena = "Por favor agrege su contraseña";
+bool loading = false;
 
 class Body extends StatelessWidget {
   const Body({super.key});
@@ -66,7 +70,6 @@ class _SingFormState extends State<SingForm> {
   final _formKey = GlobalKey<FormState>();
   String email = "";
   String clave = "";
-  userModel? usf;
 
   Future<bool> saveLogin(String user) async {
     try {
@@ -79,7 +82,9 @@ class _SingFormState extends State<SingForm> {
     }
   }
 
-  Future<String> login(String user, String pass) async {
+  Future<UserModelResponse> login(String user, String pass) async {
+    UserModelResponse umr = UserModelResponse("", null);
+
     try {
       String url = "${Environment.apiUrl}/users";
       var body = {"user": user, "password": pass};
@@ -96,19 +101,31 @@ class _SingFormState extends State<SingForm> {
 
         if (jsonData['succeeded'] == true) {
           if (jsonData['value'] == null) {
-            return "Los datos de inicio de session no son validos";
+            umr.mensaje = "La información de acceso no es corracta";
+            return umr;
           }
 
-          for (dynamic item in jsonData['value']) {
-            usf = item;
-          }
+          UserModel userModel = UserModel(
+              jsonData['value']['nombre'],
+              jsonData['value']['apellido'],
+              jsonData['value']['usuario'],
+              jsonData['value']['estatus'],
+              jsonData['value']['celular'],
+              jsonData['value']['email'],
+              jsonData['value']['pkidempresa'],
+              jsonData['value']['admin'],
+              jsonData['value']['cuadreCaja']);
+
+          umr.mensaje = "";
+          umr.data = userModel;
         }
       }
 
-      return "";
+      return umr;
     } catch (e) {
       print(e);
-      return "";
+      umr.mensaje = e.toString();
+      return umr;
     }
   }
 
@@ -130,26 +147,44 @@ class _SingFormState extends State<SingForm> {
             SizedBox(
               height: getProportionateScreenHeight(20),
             ),
-            DefaultButton(
-                text: "Iniciar Sección",
-                press: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
+            if (loading == true)
+              const CircularProgressIndicator(color: kPrimaryColor),
+            if (loading == false)
+              DefaultButton(
+                  text: "Iniciar Sección",
+                  press: () {
+                    FocusScope.of(context).unfocus();
+                    setState(() {
+                      loading = true;
+                    });
 
-                    if (txtUserName.text == "" || txtPass.text == "") {
-                      return;
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+
+                      if (txtUserName.text == "" || txtPass.text == "") {
+                        return;
+                      }
+
+                      login(txtUserName.text, txtPass.text).then((value) => {
+                            {
+                              setState(() {
+                                loading = false;
+                              }),
+                              if (value.mensaje == "")
+                                {
+                                  saveLogin(
+                                          '${value.data!.nombre} ${value.data!.apellido}')
+                                      .then((value) {
+                                    Navigator.pushNamed(
+                                        context, Bienvenida.routeName);
+                                  })
+                                }
+                              else
+                                showDialog1(context, "Inicio", value.mensaje)
+                            }
+                          });
                     }
-
-                    login(txtUserName.text, txtPass.text)!.then((value) => {
-                          if (value == "")
-                            saveLogin(txtUserName.text.toString())
-                                .then((value) {
-                              Navigator.pushNamed(
-                                  context, Bienvenida.routeName);
-                            })
-                        });
-                  }
-                }),
+                  }),
             SizedBox(
               height: getProportionateScreenHeight(30),
             ),

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money_formatter/money_formatter.dart';
 
@@ -21,4 +22,21 @@ class Util {
 
     return formattedDate;
   }
+}
+
+Future<String?> showDialog1(
+    BuildContext context, String title, String description) {
+  return showDialog<String>(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: Text(title),
+      content: Text(description),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Aceptar'),
+          child: const Text('Aceptar'),
+        ),
+      ],
+    ),
+  );
 }
