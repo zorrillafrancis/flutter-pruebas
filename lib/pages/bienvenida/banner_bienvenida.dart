@@ -1,13 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BannerBienvenida extends StatelessWidget {
+  final double width;
+  final String? name;
+
   const BannerBienvenida({
     super.key,
     required this.width,
+    this.name,
   });
-
-  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +19,12 @@ class BannerBienvenida extends StatelessWidget {
       height: 90,
       decoration: BoxDecoration(
           color: Colors.lightBlue, borderRadius: BorderRadius.circular(20)),
-      child: const Text.rich(
-        style: TextStyle(color: Colors.white),
+      child: Text.rich(
+        style: const TextStyle(color: Colors.white),
         TextSpan(text: "Bienvenidos\n", children: [
           TextSpan(
-              text: "Francis",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24))
+              text: name.toString(),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24))
         ]),
       ),
     );

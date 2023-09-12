@@ -9,11 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/icon_btn_with_counter.dart';
 import '../../components/popular_product.dart';
 import '../../components/search_field.dart';
-import '../../components/section_title.dart';
 import 'banner_bienvenida.dart';
-import 'catergories.dart';
-
-String? userName;
 
 class Bienvenida extends StatefulWidget {
   static String routeName = "/bienvenida";
@@ -25,6 +21,7 @@ class Bienvenida extends StatefulWidget {
 }
 
 class _BienvenidaState extends State<Bienvenida> {
+  String? userName;
   Future<String> getData() async {
     if (kDebugMode) {
       print('object');
@@ -78,21 +75,24 @@ class _BienvenidaState extends State<Bienvenida> {
             ),
           ),
           SizedBox(
-            height: getProportionateScreenHeight(20),
+            height: getProportionateScreenWidth(20),
           ),
-          BannerBienvenida(width: width),
+          BannerBienvenida(width: width, name: userName),
           SizedBox(
-            height: getProportionateScreenHeight(20),
+            height: getProportionateScreenWidth(20),
           ),
           PopularProducts(),
           SizedBox(
-            height: getProportionateScreenHeight(20),
+            height: getProportionateScreenWidth(30),
           ),
           Facturas_Botones(),
           SizedBox(
-            height: getProportionateScreenHeight(20),
+            height: getProportionateScreenWidth(20),
           ),
-          Facturas_Botones_2()
+          Facturas_Botones_2(),
+          SizedBox(
+            height: getProportionateScreenWidth(20),
+          ),
         ],
       ),
     )));

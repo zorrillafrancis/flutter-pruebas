@@ -215,7 +215,7 @@ String isNull(data) {
 }
 
 getDate(now) {
-  String formattedDate = DateFormat('dd/MM/yyyy').format(now);
+  String formattedDate = DateFormat('dd/MM/yyyy').format(DateTime.parse(now));
 
   return formattedDate;
 }

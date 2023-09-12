@@ -1,8 +1,14 @@
 class userModel {
-  String userName;
-  String name;
-  String lastName;
+  final String nombre;
+  final String apellido;
+  final String usuario;
+  final String estatus;
+  final String celular;
+  final String email;
+  final String pkidempresa;
+  final String admin;
+  final String cuadreCaja;
 
-  userModel(
-      {required this.userName, required this.name, required this.lastName});
+  userModel(this.nombre, this.apellido, this.usuario, this.estatus,
+      this.celular, this.email, this.pkidempresa, this.admin, this.cuadreCaja);
 }

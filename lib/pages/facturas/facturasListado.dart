@@ -1,18 +1,16 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mi_app_01/models/facturasListadoModel.dart';
+import 'package:intl/intl.dart';
+import 'package:mi_app_01/models/facturasM.dart';
 import 'package:mi_app_01/size_config.dart';
 import 'package:mi_app_01/utils/constants.dart';
-
 import '../../constants.dart';
 import '../../presentation/screens/api/restfull.dart';
 import 'facturaDetalle.dart';
 import '../../presentation/screens/menu/menu_header.dart';
 
-Future<List<Value>>? listaData;
+Future<List<Facturas>>? listaData;
 
 class FacturasListado extends StatefulWidget {
   static String routeName = "/facturaListado";
@@ -23,8 +21,8 @@ class FacturasListado extends StatefulWidget {
 }
 
 class _FacturasListadoState extends State<FacturasListado> {
-  Future<List<Value>> loadData() async {
-    List<Value> listaData = [];
+  Future<List<Facturas>> loadData() async {
+    List<Facturas> dataFactura = [];
 
     String url = "${Environment.apiUrl}/Facturas?pkidEmpresa=1&isCliente=0";
 
@@ -46,15 +44,44 @@ class _FacturasListadoState extends State<FacturasListado> {
         var jsonData = json.decode(body);
 
         for (dynamic item in jsonData['value']) {
-          Value m = Value.fromJson(item);
-          listaData.add(m);
+          Facturas f = Facturas(
+              item['id'],
+              item['numeroFactura'],
+              item['fecha'] = DateFormat('dd/MM/yyyy')
+                  .format(DateTime.parse(item['fecha'])),
+              item['nombre'],
+              item['pkidcliente'],
+              item['tiempoentrega'],
+              item['itebis'],
+              item['total'] = getCurrency(item['total'] ?? 0),
+              item['emailcliente'],
+              item['cotizacion'],
+              item['pkidempresa'],
+              item['pkidsuplidorInformar'],
+              item['itbisPorc'] == null ? null : checkDouble(item['itbisPorc']),
+              item['pkidestatus'],
+              item['recibo'],
+              item['pkidcompaniaEnvio'],
+              item['usuario']);
+
+          dataFactura.add(f);
         }
       } catch (e) {
         print(e);
       }
     }
 
-    return listaData;
+    return dataFactura;
+  }
+
+  static double checkDouble(dynamic value) {
+    if (value is String) {
+      return double.parse(value);
+    } else if (value is int) {
+      return 0.0 + value;
+    } else {
+      return value;
+    }
   }
 
   @override
@@ -71,28 +98,7 @@ class _FacturasListadoState extends State<FacturasListado> {
       body: SafeArea(
         child: Column(
           children: [
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: getProportionateScreenWidth(10),
-                      horizontal: getProportionateScreenWidth(10)),
-                  child: TextField(
-                      decoration: InputDecoration(
-                    labelText: 'Buscar',
-                    suffixIcon: const Icon(Icons.search),
-                    hintText: 'Buscar',
-                    fillColor: const Color.fromARGB(31, 240, 234, 234),
-                    filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(0),
-                        borderSide: const BorderSide(color: kTextColor),
-                        gapPadding: 1),
-                  )),
-                ),
-              ],
-            ),
-            Container(),
+            FacturasHeader(),
             const SizedBox(
               height: 10,
             ),
@@ -100,7 +106,7 @@ class _FacturasListadoState extends State<FacturasListado> {
               child: FutureBuilder(
                   future: listaData,
                   builder: (BuildContext context,
-                      AsyncSnapshot<List<Value>> snapshot) {
+                      AsyncSnapshot<List<Facturas>> snapshot) {
                     if (snapshot.data == null) {
                       return const Center(
                         child: CircularProgressIndicator(),
@@ -167,8 +173,7 @@ class _FacturasListadoState extends State<FacturasListado> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(getDate(
-                                            snapshot.data![index].fecha)),
+                                        Text(snapshot.data![index].fecha),
                                         Text(
                                           snapshot.data![index].usuario
                                               .toString(),
@@ -178,9 +183,7 @@ class _FacturasListadoState extends State<FacturasListado> {
                                         ),
                                       ],
                                     ),
-                                    trailing: Text(
-                                        getCurrency(
-                                            snapshot.data![index].total ?? 0),
+                                    trailing: Text(snapshot.data![index].total,
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w500)),
                                     enabled: snapshot.data![index].pkidestatus
@@ -196,6 +199,37 @@ class _FacturasListadoState extends State<FacturasListado> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class FacturasHeader extends StatelessWidget {
+  const FacturasHeader({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: getProportionateScreenWidth(10),
+              horizontal: getProportionateScreenWidth(10)),
+          child: TextField(
+              decoration: InputDecoration(
+            labelText: 'Buscar',
+            suffixIcon: const Icon(Icons.search),
+            hintText: 'Buscar',
+            fillColor: const Color.fromARGB(31, 240, 234, 234),
+            filled: true,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(0),
+                borderSide: const BorderSide(color: kTextColor),
+                gapPadding: 1),
+          )),
+        ),
+      ],
     );
   }
 }

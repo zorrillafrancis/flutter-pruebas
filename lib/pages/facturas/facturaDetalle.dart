@@ -1,16 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:mi_app_01/card/profile_container.dart';
+import 'package:mi_app_01/pages/facturas/profile_container.dart';
 import 'package:mi_app_01/card/profilepage.dart';
 import 'package:mi_app_01/models/facturasDetalleModel.dart';
-import 'package:mi_app_01/presentation/screens/menu/menu_bottom.dart';
 import 'package:mi_app_01/presentation/screens/menu/menu_header.dart';
 import 'package:http/http.dart' as http;
 import 'package:mi_app_01/utils/constants.dart';
-import '../../components/total.dart';
-import '../../models/facturasListadoModel.dart';
-import '../../models/gif.dart';
+import 'total.dart';
 import '../../src/provider/chatProvider.dart';
 import '../../utils/utils.dart';
 
@@ -31,7 +27,11 @@ class _DetailsState extends State<Details> {
   Future<List<Detalle>>? detalleLista;
   String url = "";
   int _selectedIndex = 0;
-  double? total = 0;
+  double total = 0;
+  double itbis = 0;
+  double subtotal = 0;
+  double descuento = 0;
+
   var totals = TotalsProvider(subtotal: 0, total: 0);
 
   Future<List<Detalle>>? loadData() async {
@@ -67,16 +67,29 @@ class _DetailsState extends State<Details> {
     detalleLista!.then(
       (res) {
         print('===== 69 ====');
-        double values = 0;
+        double inSubtotal = 0;
+        double inItbis = 0;
+        double inDescuento = 0;
 
         for (Detalle item in res) {
           if (item.subtotal != null) {
-            values += (item.subtotal ?? 0);
+            inSubtotal += (item.subtotal ?? 0);
+          }
+
+          if (item.descuento != null) {
+            inItbis += (item.descuento ?? 0);
+          }
+
+          if (item.itebis != null) {
+            inDescuento += (item.itebis ?? 0);
           }
         }
 
         setState(() {
-          total = values;
+          subtotal = inSubtotal;
+          itbis = inItbis;
+          descuento = inDescuento;
+          total = (inSubtotal + inItbis + inDescuento);
         });
       },
     );
@@ -218,7 +231,10 @@ class _DetailsState extends State<Details> {
           ],
         ),
         bottomNavigationBar: TotalWidget(
-          valor: total,
+          total: total,
+          subtotal: subtotal,
+          itbis: itbis,
+          descuento: descuento,
         ));
   }
 
