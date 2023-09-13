@@ -5,11 +5,17 @@ import 'package:intl/intl.dart';
 import 'package:mi_app_01/models/facturasM.dart';
 import 'package:mi_app_01/utils/size_config.dart';
 import 'package:mi_app_01/utils/constants.dart';
-import '../../utils/constants.dart';
+import '../../components/default_button.dart';
 import '../../presentation/screens/api/restfull.dart';
+import '../../utils/utils.dart';
 import 'facturaDetalle.dart';
 import '../../presentation/screens/menu/menu_header.dart';
 
+int listaDataCount = 0;
+String dateFrom = DateFormat('yyyy-MM-ddT00:00:00.000').format(DateTime.now());
+String dateTo = DateFormat('yyyy-MM-ddT23:59:59.999').format(DateTime.now());
+List<Facturas> dataFactura = [];
+Future<List<Facturas>>? listData;
 Future<List<Facturas>>? listaData;
 
 class FacturasListado extends StatefulWidget {
@@ -21,15 +27,19 @@ class FacturasListado extends StatefulWidget {
 }
 
 class _FacturasListadoState extends State<FacturasListado> {
-  Future<List<Facturas>> loadData() async {
+  loadData() async {
+    listData = getFacturas();
+  }
+
+  Future<List<Facturas>> getFacturas() async {
     List<Facturas> dataFactura = [];
 
     String url = "${Environment.apiUrl}/Facturas?pkidEmpresa=1&isCliente=0";
 
     var body = {
       "numero_factura": "",
-      "fechaDesde": "2023-08-15T18:46:00.660Z",
-      "fechaHasta": "2023-08-17T18:46:00.660Z"
+      "fechaDesde": dateFrom,
+      "fechaHasta": dateTo
     };
 
     final response = await http.post(Uri.parse(url),
@@ -74,20 +84,10 @@ class _FacturasListadoState extends State<FacturasListado> {
     return dataFactura;
   }
 
-  static double checkDouble(dynamic value) {
-    if (value is String) {
-      return double.parse(value);
-    } else if (value is int) {
-      return 0.0 + value;
-    } else {
-      return value;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    listaData = loadData();
+    loadData();
   }
 
   @override
@@ -104,7 +104,7 @@ class _FacturasListadoState extends State<FacturasListado> {
             ),
             Expanded(
               child: FutureBuilder(
-                  future: listaData,
+                  future: listData,
                   builder: (BuildContext context,
                       AsyncSnapshot<List<Facturas>> snapshot) {
                     if (snapshot.data == null) {
@@ -114,7 +114,7 @@ class _FacturasListadoState extends State<FacturasListado> {
                     } else {
                       return ListView.builder(
                           shrinkWrap: true,
-                          itemCount: 10,
+                          itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return Dismissible(
                               key: Key(snapshot.data![index].id.toString()),
@@ -203,13 +203,27 @@ class _FacturasListadoState extends State<FacturasListado> {
   }
 }
 
-class FacturasHeader extends StatelessWidget {
+class FacturasHeader extends StatefulWidget {
   const FacturasHeader({
     super.key,
   });
 
   @override
+  State<FacturasHeader> createState() => _FacturasHeaderState();
+}
+
+class _FacturasHeaderState extends State<FacturasHeader> {
+  showModalSearch() {}
+
+  @override
   Widget build(BuildContext context) {
+    TextEditingController txtNumber = TextEditingController();
+    TextEditingController txtDateFrom = TextEditingController();
+    TextEditingController txtDateTo = TextEditingController();
+
+    String dateFromFilter = "";
+    String dateToFilter = "";
+
     return Column(
       children: [
         Padding(
@@ -219,7 +233,136 @@ class FacturasHeader extends StatelessWidget {
           child: TextField(
               decoration: InputDecoration(
             labelText: 'Buscar',
-            suffixIcon: const Icon(Icons.search),
+            suffixIcon: IconButton(
+              onPressed: () async {
+                await showDialog<void>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          content: Stack(
+                            clipBehavior: Clip.none,
+                            children: <Widget>[
+                              Positioned(
+                                right: -40,
+                                top: -40,
+                                child: InkResponse(
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const CircleAvatar(
+                                    backgroundColor: kPrimaryColor,
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: TextField(
+                                      controller: txtNumber,
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                          hintText: "",
+                                          labelText: "Numero Factura",
+                                          prefixIcon:
+                                              Icon(Icons.post_add_outlined)),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: TextFormField(
+                                      controller: txtDateFrom,
+                                      keyboardType: TextInputType.none,
+                                      showCursor: false,
+                                      readOnly: true,
+                                      decoration: const InputDecoration(
+                                          hintText: "",
+                                          prefixIcon: Icon(
+                                            Icons.calendar_today,
+                                          ),
+                                          labelText: "Fecha Desde"),
+                                      onTap: () async {
+                                        DateTime? pickedDate =
+                                            await getDatePicker(context);
+
+                                        if (pickedDate != null) {
+                                          setState(() {
+                                            dateFromFilter = DateFormat(
+                                                    'yyyy-MM-ddT00:00:00.000')
+                                                .format(pickedDate);
+                                            txtDateFrom.text =
+                                                DateFormat('dd/MM/yyyy')
+                                                    .format(pickedDate);
+                                          });
+                                        } else {
+                                          print("Date is not selected");
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: TextFormField(
+                                      controller: txtDateTo,
+                                      keyboardType: TextInputType.none,
+                                      showCursor: false,
+                                      readOnly: true,
+                                      decoration: const InputDecoration(
+                                          hintText: "",
+                                          prefixIcon: Icon(
+                                            Icons.calendar_today,
+                                          ),
+                                          labelText: "Fecha Hasta"),
+                                      onTap: () async {
+                                        DateTime? pickedDate =
+                                            await getDatePicker(context);
+
+                                        if (pickedDate != null) {
+                                          setState(() {
+                                            dateToFilter = DateFormat(
+                                                    'yyyy-MM-ddT23:59:59.999')
+                                                .format(pickedDate);
+                                            txtDateTo.text =
+                                                DateFormat('dd/MM/yyyy')
+                                                    .format(pickedDate);
+                                          });
+                                        } else {
+                                          print("Date is not selected");
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: getProportionateScreenWidth(5),
+                                  ),
+                                  DefaultButton(
+                                      text: "Buscar",
+                                      press: () {
+                                        FocusScope.of(context).unfocus();
+                                        _FacturasListadoState fl =
+                                            _FacturasListadoState();
+
+                                        setState(() {
+                                          dateFrom = dateFromFilter;
+                                          dateTo = dateToFilter;
+                                          dataFactura = [];
+                                          fl.loadData();
+                                        });
+
+                                        Navigator.of(context).pop();
+                                      })
+                                ],
+                              ),
+                            ],
+                          ),
+                        ));
+              },
+              icon: Icon(Icons.search),
+            ),
             hintText: 'Buscar',
             fillColor: const Color.fromARGB(31, 240, 234, 234),
             filled: true,
