@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_app_01/pages/facturas/facturaDetalle.dart';
 
 class Listview2 extends StatefulWidget {
   const Listview2({super.key});

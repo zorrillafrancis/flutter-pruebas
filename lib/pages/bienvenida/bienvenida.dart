@@ -1,12 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:mi_app_01/pages/bienvenida/catergories.dart';
-import 'package:mi_app_01/utils/constants.dart';
-import 'package:mi_app_01/models/productos.dart';
-import 'package:mi_app_01/pages/facturas/facturasListado.dart';
-import 'package:mi_app_01/utils/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../pages/bienvenida/catergories.dart';
+import '../../pages/facturas/facturasListado.dart';
+import '../../utils/size_config.dart';
 import '../../components/icon_btn_with_counter.dart';
 import '../../components/popular_product.dart';
 import '../../components/search_field.dart';

@@ -3,6 +3,7 @@ import 'package:mi_app_01/components/product_card.dart';
 import 'package:mi_app_01/components/section_title.dart';
 
 import '../models/productos.dart';
+import '../pages/product/product_details.dart';
 import '../utils/size_config.dart';
 
 class PopularProducts extends StatelessWidget {
@@ -23,11 +24,17 @@ class PopularProducts extends StatelessWidget {
               ...List.generate(
                 demoProducts.length,
                 (index) {
-                  if (demoProducts[index].isPopular)
-                    return ProductCard(product: demoProducts[index]);
-
-                  return const SizedBox
-                      .shrink(); // here by default width and height is 0
+                  if (demoProducts[index].isPopular) {
+                    return ProductCard(
+                      product: demoProducts[index],
+                      press: () => Navigator.pushNamed(
+                          context, ProductDetails.routeName,
+                          arguments: demoProducts[index]),
+                    );
+                  } else {
+                    return const SizedBox
+                        .shrink(); // here by default width and height is 0
+                  }
                 },
               ),
               SizedBox(width: getProportionateScreenWidth(20)),

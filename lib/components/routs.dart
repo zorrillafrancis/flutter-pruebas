@@ -10,5 +10,5 @@ final Map<String, WidgetBuilder> routes = {
   SignInScreen.routeName: (context) => SignInScreen(),
   Bienvenida.routeName: (context) => Bienvenida(),
   FacturasListado.routeName: (context) => FacturasListado(),
-  DetailScreen.routeName: (context) => DetailScreen(),
+  ProductDetails.routeName: (context) => ProductDetails(),
 };

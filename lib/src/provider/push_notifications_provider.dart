@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_app_installations/firebase_app_installations.dart';
-import 'package:flutter/cupertino.dart';
-
 import '../../data/data-entity.dart';
 import '../../main.dart';
 

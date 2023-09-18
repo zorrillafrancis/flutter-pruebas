@@ -12,6 +12,7 @@ import '../../utils/utils.dart';
 int listaDataTotal = 0;
 Header? inheader;
 String displayText = "";
+int _selectedIndex = 0;
 
 class Details extends StatefulWidget {
   final int facturaId;
@@ -26,7 +27,6 @@ class _DetailsState extends State<Details> {
   Util util = Util();
   Future<List<Detalle>>? detalleLista;
   String url = "";
-  int _selectedIndex = 0;
   double total = 0;
   double itbis = 0;
   double subtotal = 0;
@@ -119,10 +119,8 @@ class _DetailsState extends State<Details> {
                           child: CircularProgressIndicator(),
                         );
                       case ConnectionState.done:
-                        print('done ' + listaDataTotal.toString());
-
                         if (listaDataTotal == 0) {
-                          return Center(
+                          return const Center(
                             child: Text('No existe nada para mostrar'),
                           );
                         } else {
@@ -131,7 +129,7 @@ class _DetailsState extends State<Details> {
                               itemCount: listaDataTotal,
                               itemBuilder: (context, index) {
                                 if (listaDataTotal == 0) {
-                                  return Center(
+                                  return const Center(
                                     child: Text('text'),
                                   );
                                 } else {

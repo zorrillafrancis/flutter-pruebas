@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/components/splash_content.dart';
 import 'package:mi_app_01/utils/constants.dart';
@@ -47,7 +45,6 @@ class _BodyState extends State<Body> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     isLogin();
   }

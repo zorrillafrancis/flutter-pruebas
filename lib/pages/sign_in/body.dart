@@ -8,7 +8,6 @@ import 'package:mi_app_01/pages/bienvenida/bienvenida.dart';
 import 'package:mi_app_01/utils/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/social_card.dart';
-import '../../utils/constants.dart';
 import 'package:http/http.dart' as http;
 
 import '../../utils/utils.dart';

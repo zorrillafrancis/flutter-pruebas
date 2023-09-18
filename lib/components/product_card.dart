@@ -7,15 +7,17 @@ import '../models/productos.dart';
 import '../utils/size_config.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({
-    Key? key,
-    this.width = 140,
-    this.aspectRetio = 1.02,
-    required this.product,
-  }) : super(key: key);
-
   final double width, aspectRetio;
   final Product product;
+  final Function() press;
+
+  const ProductCard(
+      {Key? key,
+      this.width = 140,
+      this.aspectRetio = 1.02,
+      required this.product,
+      required this.press})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +26,8 @@ class ProductCard extends StatelessWidget {
       child: SizedBox(
         width: getProportionateScreenWidth(width),
         child: GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, DetailScreen.routeName);
-          },
+          onTap: () => Navigator.pushNamed(context, ProductDetails.routeName,
+              arguments: ProductDetailsArguments(product: product)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
