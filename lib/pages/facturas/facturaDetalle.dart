@@ -11,6 +11,7 @@ import '../../utils/utils.dart';
 
 int listaDataTotal = 0;
 Header? inheader;
+String displayText = "";
 
 class Details extends StatefulWidget {
   final int facturaId;
@@ -112,114 +113,145 @@ class _DetailsState extends State<Details> {
                   future: detalleLista,
                   builder: (BuildContext context,
                       AsyncSnapshot<List<Detalle>> snapshot) {
-                    if (snapshot.data == null) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: listaDataTotal,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                if (index == 0)
-                                  Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ProfileContainer(
-                                        header: inheader,
-                                      )),
-                                if (index == 0)
-                                  const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: ProfileSendTo(
-                                        text: 'enviado a ',
-                                      )),
-                                Card(
-                                  margin: const EdgeInsets.all(8.0),
-                                  elevation: 0.5,
-                                  child: ListTile(
-                                      onTap: () {},
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 2, horizontal: 10),
-                                      visualDensity:
-                                          const VisualDensity(vertical: 1),
-                                      leading: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(snapshot.data![index].codigo
-                                              .toString())
-                                        ],
-                                      ),
-                                      title: Text(
-                                        snapshot.data![index].descripcion,
-                                        style: const TextStyle(
-                                            color: Colors.black),
-                                      ),
-                                      subtitle: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text.rich(TextSpan(
-                                              text: util.getCurrency(
-                                                  snapshot.data![index]
-                                                          .preciounitario ??
-                                                      0,
-                                                  false),
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12,
-                                                  color: Colors.blueAccent),
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      case ConnectionState.done:
+                        print('done ' + listaDataTotal.toString());
+
+                        if (listaDataTotal == 0) {
+                          return Center(
+                            child: Text('No existe nada para mostrar'),
+                          );
+                        } else {
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: listaDataTotal,
+                              itemBuilder: (context, index) {
+                                if (listaDataTotal == 0) {
+                                  return Center(
+                                    child: Text('text'),
+                                  );
+                                } else {
+                                  return Column(
+                                    children: [
+                                      if (index == 0)
+                                        Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ProfileContainer(
+                                              header: inheader,
+                                            )),
+                                      if (index == 0)
+                                        const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: ProfileSendTo(
+                                              text: 'enviado a ',
+                                            )),
+                                      Card(
+                                        margin: const EdgeInsets.all(8.0),
+                                        elevation: 0.5,
+                                        child: ListTile(
+                                            onTap: () {},
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 2,
+                                                    horizontal: 10),
+                                            visualDensity: const VisualDensity(
+                                                vertical: 1),
+                                            leading: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
-                                                TextSpan(
-                                                    text:
-                                                        " x ${snapshot.data![index].cantidad}",
+                                                Text(snapshot
+                                                    .data![index].codigo
+                                                    .toString())
+                                              ],
+                                            ),
+                                            title: Text(
+                                              snapshot.data![index].descripcion,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text.rich(TextSpan(
+                                                    text: util.getCurrency(
+                                                        snapshot.data![index]
+                                                                .preciounitario ??
+                                                            0,
+                                                        false),
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 12,
+                                                        color:
+                                                            Colors.blueAccent),
+                                                    children: [
+                                                      TextSpan(
+                                                          text:
+                                                              " x ${snapshot.data![index].cantidad}",
+                                                          style: const TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal))
+                                                    ])),
+                                                if (snapshot
+                                                        .data![index].descuento!
+                                                        .toDouble() >
+                                                    0)
+                                                  Text(
+                                                    "-${util.getCurrency(snapshot.data![index].descuento ?? 0, false)}",
                                                     style: const TextStyle(
                                                         fontSize: 12,
-                                                        color: Colors.black,
+                                                        fontStyle:
+                                                            FontStyle.italic),
+                                                  )
+                                              ],
+                                            ),
+                                            trailing: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                    util
+                                                        .getCurrency(snapshot
+                                                                .data![index]
+                                                                .subtotal ??
+                                                            0)
+                                                        .toString(),
+                                                    style: const TextStyle(
                                                         fontWeight:
-                                                            FontWeight.normal))
-                                              ])),
-                                          if (snapshot.data![index].descuento!
-                                                  .toDouble() >
-                                              0)
-                                            Text(
-                                              "-${util.getCurrency(snapshot.data![index].descuento ?? 0, false)}",
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontStyle: FontStyle.italic),
-                                            )
-                                        ],
+                                                            FontWeight.w500)),
+                                                if (snapshot
+                                                        .data![index].itebis! >
+                                                    0)
+                                                  Text(
+                                                    'Itbis${util.getCurrency(snapshot.data![index].itebis ?? 0, false)}',
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontStyle:
+                                                            FontStyle.italic),
+                                                  )
+                                              ],
+                                            )),
                                       ),
-                                      trailing: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                              util
-                                                  .getCurrency(snapshot
-                                                          .data![index]
-                                                          .subtotal ??
-                                                      0)
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w500)),
-                                          if (snapshot.data![index].itebis! > 0)
-                                            Text(
-                                              'Itbis${util.getCurrency(snapshot.data![index].itebis ?? 0, false)}',
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontStyle: FontStyle.italic),
-                                            )
-                                        ],
-                                      )),
-                                ),
-                              ],
-                            );
-                          });
+                                    ],
+                                  );
+                                }
+                              });
+                        }
+                      default:
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
                     }
                   }),
             ),

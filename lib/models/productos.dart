@@ -29,6 +29,7 @@ List<Product> demoProducts = [
       "lib/assets/images/ps4_console_white_2.png",
       "lib/assets/images/ps4_console_white_3.png",
       "lib/assets/images/ps4_console_white_4.png",
+      "lib/assets/images/tshirt.png",
     ],
     colors: [
       Color(0xFFF6625E),
@@ -91,6 +92,24 @@ List<Product> demoProducts = [
     ],
     title: "Logitech Head",
     price: 20.20,
+    description: description,
+    rating: 4.1,
+    isFavourite: true,
+    isPopular: true,
+  ),
+  Product(
+    id: 5,
+    images: [
+      "lib/assets/images/tshirt.png",
+    ],
+    colors: [
+      Color(0xFFF6625E),
+      Color(0xFF836DB8),
+      Color(0xFFDECB9C),
+      Colors.white,
+    ],
+    title: "T-Shirt",
+    price: 150.20,
     description: description,
     rating: 4.1,
     isFavourite: true,

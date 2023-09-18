@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mi_app_01/pages/bienvenida/catergories.dart';
 import 'package:mi_app_01/utils/constants.dart';
 import 'package:mi_app_01/models/productos.dart';
 import 'package:mi_app_01/pages/facturas/facturasListado.dart';
@@ -81,15 +82,18 @@ class _BienvenidaState extends State<Bienvenida> {
           SizedBox(
             height: getProportionateScreenWidth(20),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Categories(),
+          ),
+          SizedBox(
+            height: getProportionateScreenWidth(20),
+          ),
           PopularProducts(),
           SizedBox(
             height: getProportionateScreenWidth(30),
           ),
           Facturas_Botones(),
-          SizedBox(
-            height: getProportionateScreenWidth(20),
-          ),
-          Facturas_Botones_2(),
           SizedBox(
             height: getProportionateScreenWidth(20),
           ),

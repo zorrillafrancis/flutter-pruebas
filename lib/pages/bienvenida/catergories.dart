@@ -23,16 +23,13 @@ class Categories extends StatelessWidget {
         ...List.generate(
             categories.length,
             (index) => Padding(
-                  padding: const EdgeInsets.all(4.0),
+                  padding: const EdgeInsets.all(5),
                   child: CategoryCard(
                     icon: categories[index]["icon"],
                     text: categories[index]["text"],
                     press: () {},
                   ),
                 )),
-        const SizedBox(
-          width: 10,
-        )
       ],
     );
   }
@@ -53,7 +50,8 @@ class CategoryCard extends StatelessWidget {
           width: 63,
           child: Column(children: [
             Container(
-              padding: const EdgeInsets.all(5),
+              margin: const EdgeInsets.symmetric(horizontal: 0),
+              padding: const EdgeInsets.all(7),
               height: 55,
               width: 63,
               decoration: BoxDecoration(

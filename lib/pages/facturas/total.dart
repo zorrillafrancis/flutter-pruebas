@@ -15,46 +15,50 @@ class TotalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 120,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        decoration: BoxDecoration(color: Colors.white, boxShadow: [
-          BoxShadow(
-              offset: const Offset(0, -15),
-              blurRadius: 20,
-              color: const Color(0xFFDADADA).withOpacity(0.15))
-        ]),
-        child: Row(
-          children: [
-            Container(
-              height: 60,
-              width: 200,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: Colors.blueAccent,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Text(
-                getCurrency(total),
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                    color: Colors.white),
+    if (total > 0) {
+      return Container(
+          height: 120,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          decoration: BoxDecoration(color: Colors.white, boxShadow: [
+            BoxShadow(
+                offset: const Offset(0, -15),
+                blurRadius: 20,
+                color: const Color(0xFFDADADA).withOpacity(0.15))
+          ]),
+          child: Row(
+            children: [
+              Container(
+                height: 60,
+                width: 200,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Text(
+                  getCurrency(total),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      color: Colors.white),
+                ),
               ),
-            ),
-            const Spacer(),
-            Container(
-              height: 60,
-              width: 150,
-              alignment: Alignment.center,
-              child: const Text(
-                "Ver Detalle",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.blueAccent),
+              const Spacer(),
+              Container(
+                height: 60,
+                width: 150,
+                alignment: Alignment.center,
+                child: const Text(
+                  "Ver Detalle",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.blueAccent),
+                ),
               ),
-            ),
-          ],
-        ));
+            ],
+          ));
+    } else {
+      return Text('');
+    }
   }
 }

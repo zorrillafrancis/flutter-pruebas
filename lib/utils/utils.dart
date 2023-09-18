@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mi_app_01/utils/constants.dart';
 import 'package:money_formatter/money_formatter.dart';
 
 class Util {
@@ -53,9 +54,31 @@ double checkDouble(dynamic value) {
 
 Future<DateTime?> getDatePicker(BuildContext context) {
   return showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(
-          2000), //DateTime.now() - not to allow to choose before today.
-      lastDate: DateTime(2101));
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate:
+        DateTime(2000), //DateTime.now() - not to allow to choose before today.
+    lastDate: DateTime(2101),
+    builder: (context, child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.light(
+            primary: kPrimaryColor, // header background color
+            onPrimary: Colors.white, // header text color
+            onSurface: Colors.black, // body text color
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: kPrimaryColor, // button text color
+            ),
+          ),
+        ),
+        child: Container(
+          child: child!,
+          height: 150,
+          width: 150,
+        ),
+      );
+    },
+  );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mi_app_01/pages/product/product_details.dart';
 
 import '../utils/constants.dart';
 import '../models/productos.dart';
@@ -23,7 +24,9 @@ class ProductCard extends StatelessWidget {
       child: SizedBox(
         width: getProportionateScreenWidth(width),
         child: GestureDetector(
-          onTap: () {},
+          onTap: () {
+            Navigator.pushNamed(context, DetailScreen.routeName);
+          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -74,8 +77,8 @@ class ProductCard extends StatelessWidget {
                       child: SvgPicture.asset(
                         "lib/assets/icons/Heart Icon_2.svg",
                         color: product.isFavourite
-                            ? Color(0xFFFF4848)
-                            : Color(0xFFDBDEE4),
+                            ? const Color(0xFFFF4848)
+                            : const Color(0xFFDBDEE4),
                       ),
                     ),
                   ),
