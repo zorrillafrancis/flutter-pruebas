@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_app_01/presentation/screens/api/restfull.dart';
+import '../../utils/utils.dart';
 
 class TotalWidget extends StatelessWidget {
   final double total;
@@ -15,6 +15,8 @@ class TotalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Util util = Util();
+
     if (total > 0) {
       return Container(
           height: 120,
@@ -35,7 +37,7 @@ class TotalWidget extends StatelessWidget {
                     color: Colors.blueAccent,
                     borderRadius: BorderRadius.circular(10)),
                 child: Text(
-                  getCurrency(total),
+                  util.getCurrency(total),
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 25,

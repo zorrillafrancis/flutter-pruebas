@@ -6,7 +6,6 @@ import 'package:mi_app_01/models/facturasM.dart';
 import 'package:mi_app_01/utils/size_config.dart';
 import 'package:mi_app_01/utils/constants.dart';
 import '../../components/default_button.dart';
-import '../../presentation/screens/api/restfull.dart';
 import '../../utils/utils.dart';
 import 'facturaDetalle.dart';
 import '../../presentation/screens/menu/menu_header.dart';
@@ -31,6 +30,7 @@ class FacturasListado extends StatefulWidget {
 }
 
 class _FacturasListadoState extends State<FacturasListado> {
+  Util util = Util();
   Future<List<Facturas>> getFacturas() async {
     List<Facturas> dataFactura = [];
 
@@ -63,7 +63,7 @@ class _FacturasListadoState extends State<FacturasListado> {
               item['pkidcliente'],
               item['tiempoentrega'],
               item['itebis'],
-              item['total'] = getCurrency(item['total'] ?? 0),
+              item['total'] = util.getCurrency(item['total'] ?? 0),
               item['emailcliente'],
               item['cotizacion'],
               item['pkidempresa'],
@@ -319,9 +319,10 @@ class _FacturasListadoState extends State<FacturasListado> {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => Details(
-                                                    facturaId: snapshot
-                                                        .data![index].id),
+                                                builder: (context) =>
+                                                    FacturaDetalle(
+                                                        facturaId: snapshot
+                                                            .data![index].id),
                                               ));
                                         },
                                         contentPadding:

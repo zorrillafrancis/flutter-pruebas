@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mi_app_01/components/routs.dart';
 import 'package:mi_app_01/src/provider/chatProvider.dart';
 import 'package:mi_app_01/pages/splash/splash_screen.dart';
+import 'package:mi_app_01/src/provider/push_notifications_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'components/theme.dart';
@@ -47,7 +48,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-/*
     print('test 1');
 
     final pushProvider = PushNotificationProvider();
@@ -56,10 +56,10 @@ class _MyAppState extends State<MyApp> {
 
     pushProvider.mensajes.listen((event) {
       print('argumento x');
+      print(event);
 
-      //  natigatorKey.currentState?.pushNamed('mensaje', arguments: event);
+      natigatorKey.currentState?.pushNamed('/bienvenida');
     });
-    */
   }
 
   @override

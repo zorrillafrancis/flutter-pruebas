@@ -14,16 +14,17 @@ Header? inheader;
 String displayText = "";
 int _selectedIndex = 0;
 
-class Details extends StatefulWidget {
+class FacturaDetalle extends StatefulWidget {
+  static const routeName = '/facturaDetalle';
   final int facturaId;
 
-  const Details({super.key, required this.facturaId});
+  const FacturaDetalle({super.key, required this.facturaId});
 
   @override
-  State<Details> createState() => _DetailsState();
+  State<FacturaDetalle> createState() => _FacturaDetalleState();
 }
 
-class _DetailsState extends State<Details> {
+class _FacturaDetalleState extends State<FacturaDetalle> {
   Util util = Util();
   Future<List<Detalle>>? detalleLista;
   String url = "";

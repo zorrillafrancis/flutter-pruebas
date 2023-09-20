@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mi_app_01/components/default_button.dart';
+import 'package:mi_app_01/components/rounded_icon_btn.dart';
 import 'package:mi_app_01/utils/constants.dart';
 import 'package:mi_app_01/utils/size_config.dart';
 import '../../pages/product/product_images.dart';
@@ -16,13 +18,99 @@ class ProductDetailBody extends StatefulWidget {
 class _ProductDetailBodyState extends State<ProductDetailBody> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      ProductImages(product: widget.product),
-      TopRoundedContainer(
-        color: Colors.white,
-        child: ProductDescription(widget: widget),
-      )
-    ]);
+    return SingleChildScrollView(
+      child: Column(children: [
+        ProductImages(product: widget.product),
+        TopRoundedContainer(
+          color: Colors.white,
+          child: Column(
+            children: [
+              ProductDescription(widget: widget),
+              TopRoundedContainer(
+                  color: const Color(0xFFF6F6F9),
+                  child: Column(
+                    children: [
+                      ColorDots(product: widget.product),
+                      TopRoundedContainer(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.screenWidth * 0.15,
+                                right: SizeConfig.screenWidth * 0.15,
+                                top: getProportionateScreenWidth(1),
+                                bottom: getProportionateScreenWidth(10)),
+                            child: DefaultButton(text: "Agregar", press: () {}),
+                          ))
+                    ],
+                  ))
+            ],
+          ),
+        )
+      ]),
+    );
+  }
+}
+
+class ColorDots extends StatelessWidget {
+  final Product product;
+
+  const ColorDots({
+    super.key,
+    required this.product,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    int selectedColor = 2;
+
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+      child: Row(
+        children: [
+          Row(
+            children: [
+              ...List.generate(product.colors.length, (index) {
+                return ColorDot(
+                  color: product.colors[index],
+                  isSelected: selectedColor == index,
+                );
+              }),
+            ],
+          ),
+          const Spacer(),
+          RoundededIconBtn(iconData: Icons.remove, press: () {}),
+          RoundededIconBtn(iconData: Icons.add, press: () {})
+        ],
+      ),
+    );
+  }
+}
+
+class ColorDot extends StatelessWidget {
+  final Color color;
+  final bool isSelected;
+
+  const ColorDot({
+    super.key,
+    required this.color,
+    this.isSelected = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: const EdgeInsets.only(right: 2),
+        height: getProportionateScreenWidth(40),
+        width: getProportionateScreenWidth(40),
+        decoration: BoxDecoration(
+            //   color: widget.product.colors[0],
+            shape: BoxShape.circle,
+            border: Border.all(
+                color: isSelected ? kPrimaryColor : Colors.transparent)),
+        child: DecoratedBox(
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ));
   }
 }
 
@@ -121,7 +209,6 @@ class TopRoundedContainer extends StatelessWidget {
       padding: EdgeInsets.only(top: getProportionateScreenWidth(20)),
       margin: EdgeInsets.only(top: getProportionateScreenWidth(20)),
       width: double.infinity,
-      height: 300,
       decoration: BoxDecoration(
         color: color,
         borderRadius: const BorderRadius.only(
