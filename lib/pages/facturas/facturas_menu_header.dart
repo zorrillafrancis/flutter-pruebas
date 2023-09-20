@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MenuHeader {
+class FacturasMenuHeader {
   getAppBar(title) {
     return AppBar(
       title: Text(

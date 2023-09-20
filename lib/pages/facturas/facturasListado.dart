@@ -8,7 +8,7 @@ import 'package:mi_app_01/utils/constants.dart';
 import '../../components/default_button.dart';
 import '../../utils/utils.dart';
 import 'facturaDetalle.dart';
-import '../../presentation/screens/menu/menu_header.dart';
+import 'facturas_menu_header.dart';
 
 String numero_factura = "";
 String dateFrom = DateFormat('yyyy-MM-ddT00:00:00.000').format(DateTime.now());
@@ -107,7 +107,7 @@ class _FacturasListadoState extends State<FacturasListado> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: MenuHeader().getAppBar('Facturas'),
+      appBar: FacturasMenuHeader().getAppBar('Facturas'),
       body: SafeArea(
         child: Column(
           children: [

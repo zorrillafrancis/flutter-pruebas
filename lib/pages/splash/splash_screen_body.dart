@@ -6,18 +6,18 @@ import 'package:mi_app_01/pages/sign_in/sign_in_screen.dart';
 import 'package:mi_app_01/utils/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'default_button.dart';
+import '../../components/default_button.dart';
 
 bool loggedIn = false;
 
-class Body extends StatefulWidget {
-  const Body({super.key});
+class SplashScreenBody extends StatefulWidget {
+  const SplashScreenBody({super.key});
 
   @override
-  State<Body> createState() => _BodyState();
+  State<SplashScreenBody> createState() => _SplashScreenBodyState();
 }
 
-class _BodyState extends State<Body> {
+class _SplashScreenBodyState extends State<SplashScreenBody> {
   int currentPage = 0;
   List<Map<String, String>> splashData = [
     {

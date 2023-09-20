@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:mi_app_01/pages/users/users.dart';
 import '../pages/bienvenida/bienvenida.dart';
 import '../pages/facturas/facturaDetalle.dart';
 import '../pages/facturas/facturasListado.dart';
@@ -9,6 +10,7 @@ import '../pages/product/product_details.dart';
 
 final Map<String, WidgetBuilder> routes = {
   SplashScreen.routeName: (context) => SplashScreen(),
+  Users.routeName: (context) => Users(),
   SignInScreen.routeName: (context) => SignInScreen(),
   Bienvenida.routeName: (context) => Bienvenida(),
   FacturasListado.routeName: (context) => FacturasListado(),

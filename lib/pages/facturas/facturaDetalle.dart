@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mi_app_01/pages/facturas/profile_container.dart';
 import 'package:mi_app_01/pages/facturas/profile_send_to.dart';
 import 'package:mi_app_01/models/facturasDetalleModel.dart';
-import 'package:mi_app_01/presentation/screens/menu/menu_header.dart';
+import 'package:mi_app_01/pages/facturas/facturas_menu_header.dart';
 import 'package:http/http.dart' as http;
 import 'package:mi_app_01/utils/constants.dart';
 import 'total.dart';
@@ -103,7 +103,7 @@ class _FacturaDetalleState extends State<FacturaDetalle> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MenuHeader().getAppBar('Detalle de la Factura'),
+        appBar: FacturasMenuHeader().getAppBar('Detalle de la Factura'),
         body: Column(
           children: [
             const SizedBox(

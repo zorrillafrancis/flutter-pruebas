@@ -7,6 +7,7 @@ import '../../utils/size_config.dart';
 import '../../components/icon_btn_with_counter.dart';
 import '../../components/popular_product.dart';
 import '../../components/search_field.dart';
+import '../users/users.dart';
 import 'banner_bienvenida.dart';
 
 class Bienvenida extends StatefulWidget {
@@ -137,7 +138,7 @@ class Facturas_Botones extends StatelessWidget {
                 label: const Text('Usuarios'),
                 icon: const Icon(Icons.person),
                 onPressed: () {
-                  print('===== Usuarios =====');
+                  Navigator.pushNamed(context, Users.routeName);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
