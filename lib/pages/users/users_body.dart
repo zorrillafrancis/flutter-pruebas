@@ -36,17 +36,17 @@ class _UsersState extends State<UsersBody> {
 
         for (dynamic item in jsonData['value']) {
           UserModel us = UserModel(
-              item['nombre'],
-              item['apellido'],
-              item['usuario'],
-              item['estatus'],
-              item['celular'],
-              item['email'],
-              item['pkidempresa'],
-              item['admin'],
-              item['cuadreCaja']);
+              nombre: item['nombre'],
+              apellido: item['apellido'],
+              usuario: item['usuario'],
+              estatus: item['estatus'],
+              celular: item['celular'],
+              email: item['email'],
+              pkidempresa: item['pkidempresa'],
+              admin: item['admin'],
+              cuadreCaja: item['cuadreCaja']);
 
-          data.add(us);
+          userList.add(us);
         }
       } catch (error) {
         print(error);
@@ -64,105 +64,43 @@ class _UsersState extends State<UsersBody> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Expanded(
-              child: FutureBuilder(
-                  future: usersList,
-                  builder: (BuildContext context, snapshot) {
-                    print("==== connection =====");
-                    print(snapshot.connectionState);
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      case ConnectionState.done:
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              return Dismissible(
-                                key: Key(
-                                    snapshot.data![index].usuario.toString()),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      height: 100,
-                                      width: 120,
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 50,
-                                        color: Colors.grey[300],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '${snapshot.data![index].nombre ?? ""} ${snapshot.data![index].apellido ?? ""}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5),
-                                            child: Text(
-                                              "${snapshot.data![index].usuario}\n${snapshot.data![index].email}",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 40,
-                                      width: 40,
-                                      child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
-                                          margin: EdgeInsets.only(
-                                              right:
-                                                  getProportionateScreenWidth(
-                                                      10),
-                                              top: getProportionateScreenWidth(
-                                                  10)),
-                                          width: 30,
-                                          child:
-                                              snapshot.data![index].estatus ==
-                                                      "1"
-                                                  ? Icon(Icons.check_circle,
-                                                      size: 30,
-                                                      color: Colors.green[600])
-                                                  : const Icon(
-                                                      Icons
-                                                          .disabled_by_default_rounded,
-                                                      size: 30,
-                                                      color: Colors.red,
-                                                    )),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
-                      default:
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                    }
-                  }),
-            )
-          ],
+    return Column(
+      children: [
+        const SizedBox(
+          height: 10,
         ),
-      ),
+        Expanded(
+          child: FutureBuilder(
+              future: usersList,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<UserModel>> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Expanded(
+                        child: ListView.separated(
+                            itemBuilder: (context, index) => LoadingList(),
+                            separatorBuilder: (context, index) => SizedBox(
+                                  height: 16,
+                                ),
+                            itemCount: 8));
+                  case ConnectionState.done:
+                    final posts = snapshot.data!;
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          return UserList(
+                            user: posts[index],
+                          );
+                        });
+                  default:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                }
+              }),
+        ),
+      ],
     );
   }
 }
@@ -224,6 +162,65 @@ class UserList extends StatelessWidget {
                     )),
         ),
       ],
+    );
+  }
+}
+
+class LoadingList extends StatelessWidget {
+  const LoadingList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.only(left: 5),
+      child: Row(
+        children: [
+          Loading(
+            height: 120,
+            width: 120,
+          ),
+          SizedBox(
+            width: 16,
+          ),
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Loading(width: 80),
+              SizedBox(height: 8),
+              Loading(),
+              SizedBox(height: 8),
+              Loading(),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(child: Loading()),
+                ],
+              )
+            ],
+          ))
+        ],
+      ),
+    );
+  }
+}
+
+class Loading extends StatelessWidget {
+  final double? height, width;
+
+  const Loading({super.key, this.height, this.width});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      width: width,
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.04),
+          borderRadius: const BorderRadius.all(Radius.circular(16))),
     );
   }
 }

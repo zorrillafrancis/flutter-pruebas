@@ -7,6 +7,7 @@ import 'package:mi_app_01/utils/size_config.dart';
 import 'package:mi_app_01/utils/constants.dart';
 import '../../components/default_button.dart';
 import '../../utils/utils.dart';
+import '../users/users_body.dart';
 import 'facturaDetalle.dart';
 import 'facturas_menu_header.dart';
 
@@ -278,12 +279,18 @@ class _FacturasListadoState extends State<FacturasListado> {
                     print(snapshot.connectionState);
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return Expanded(
+                            child: ListView.separated(
+                                itemBuilder: (context, index) =>
+                                    const LoadingList(),
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                itemCount: 8));
                       case ConnectionState.done:
                         if (listaDataTotal == 0) {
-                          return Center(
+                          return const Center(
                             child: Text('No existe nada para mostrar'),
                           );
                         } else {

@@ -105,15 +105,15 @@ class _SingFormState extends State<SingForm> {
           }
 
           UserModel userModel = UserModel(
-              jsonData['value']['nombre'],
-              jsonData['value']['apellido'],
-              jsonData['value']['usuario'],
-              jsonData['value']['estatus'],
-              jsonData['value']['celular'],
-              jsonData['value']['email'],
-              jsonData['value']['pkidempresa'],
-              jsonData['value']['admin'],
-              jsonData['value']['cuadreCaja']);
+              nombre: jsonData['value']['nombre'],
+              apellido: jsonData['value']['apellido'],
+              usuario: jsonData['value']['usuario'],
+              estatus: jsonData['value']['estatus'],
+              celular: jsonData['value']['celular'],
+              email: jsonData['value']['email'],
+              pkidempresa: jsonData['value']['pkidempresa'],
+              admin: jsonData['value']['admin'],
+              cuadreCaja: jsonData['value']['cuadreCaja']);
 
           umr.mensaje = "";
           umr.data = userModel;
