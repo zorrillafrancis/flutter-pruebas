@@ -15,6 +15,6 @@ final Map<String, WidgetBuilder> routes = {
   Bienvenida.routeName: (context) => Bienvenida(),
   FacturasListado.routeName: (context) => FacturasListado(),
   ProductDetails.routeName: (context) => ProductDetails(),
-  FacturaDetalle.routeName: (context) => FacturaDetalle(facturaId: 0),
+  FacturaDetalle.routeName: (context) => FacturaDetalle(),
   Prueba.routeName: (context) => Prueba(),
 };

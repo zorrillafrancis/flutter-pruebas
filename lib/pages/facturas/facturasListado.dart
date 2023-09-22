@@ -323,14 +323,21 @@ class _FacturasListadoState extends State<FacturasListado> {
                                         onTap: () {
                                           print('click');
                                           print(snapshot.data![index].id);
-                                          Navigator.push(
+                                          /*  Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     FacturaDetalle(
                                                         facturaId: snapshot
                                                             .data![index].id),
-                                              ));
+                                              )); */
+
+                                          Navigator.pushNamed(
+                                              context, FacturaDetalle.routeName,
+                                              arguments:
+                                                  FacturaDetalleArguments(
+                                                      arguments: snapshot
+                                                          .data![index].id));
                                         },
                                         contentPadding:
                                             const EdgeInsets.symmetric(

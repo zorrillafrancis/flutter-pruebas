@@ -14,17 +14,38 @@ Header? inheader;
 String displayText = "";
 int _selectedIndex = 0;
 
-class FacturaDetalle extends StatefulWidget {
+class FacturaDetalle extends StatelessWidget {
   static const routeName = '/facturaDetalle';
-  final int facturaId;
 
-  const FacturaDetalle({super.key, required this.facturaId});
+  const FacturaDetalle({super.key});
 
   @override
-  State<FacturaDetalle> createState() => _FacturaDetalleState();
+  Widget build(BuildContext context) {
+    final arg =
+        ModalRoute.of(context)!.settings.arguments as FacturaDetalleArguments;
+    print(arg);
+
+    return Scaffold(
+        appBar: FacturasMenuHeader().getAppBar('Detalle de la Factura'),
+        body: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ));
+  }
 }
 
-class _FacturaDetalleState extends State<FacturaDetalle> {
+class FacturaDetallebody extends StatefulWidget {
+  final int arg;
+  const FacturaDetallebody({super.key, required this.arg});
+
+  @override
+  State<FacturaDetallebody> createState() => _FacturaDetallebodyState();
+}
+
+class _FacturaDetallebodyState extends State<FacturaDetallebody> {
   Util util = Util();
   Future<List<Detalle>>? detalleLista;
   String url = "";
@@ -36,7 +57,7 @@ class _FacturaDetalleState extends State<FacturaDetalle> {
   Future<List<Detalle>>? loadData() async {
     List<Detalle> list = [];
     String url =
-        "${Environment.apiUrl}/Facturas/GetDetalleById?id=${widget.facturaId}";
+        "${Environment.apiUrl}/Facturas/GetDetalleById?id=${widget.arg}";
 
     final response = await http.get(Uri.parse(url));
 
@@ -61,209 +82,196 @@ class _FacturaDetalleState extends State<FacturaDetalle> {
   @override
   void initState() {
     super.initState();
-    detalleLista = loadData();
-
-    detalleLista!.then(
-      (res) {
-        print('===== 69 ====');
-        double inSubtotal = 0;
-        double inItbis = 0;
-        double inDescuento = 0;
-
-        for (Detalle item in res) {
-          if (item.subtotal != null) {
-            inSubtotal += (item.subtotal ?? 0);
-          }
-
-          if (item.descuento != null) {
-            inItbis += (item.descuento ?? 0);
-          }
-
-          if (item.itebis != null) {
-            inDescuento += (item.itebis ?? 0);
-          }
-        }
-
-        setState(() {
-          subtotal = inSubtotal;
-          itbis = inItbis;
-          descuento = inDescuento;
-          total = (inSubtotal + inItbis + inDescuento);
-        });
-      },
-    );
-  }
-
-  void onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: FacturasMenuHeader().getAppBar('Detalle de la Factura'),
-        body: Column(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: FutureBuilder(
-                  future: detalleLista,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Detalle>> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      case ConnectionState.done:
-                        if (listaDataTotal == 0) {
-                          return const Center(
-                            child: Text('No existe nada para mostrar'),
-                          );
-                        } else {
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: listaDataTotal,
-                              itemBuilder: (context, index) {
-                                if (listaDataTotal == 0) {
-                                  return const Center(
-                                    child: Text('text'),
-                                  );
-                                } else {
-                                  return Column(
-                                    children: [
-                                      if (index == 0)
-                                        Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: ProfileContainer(
-                                              header: inheader,
-                                            )),
-                                      if (index == 0)
-                                        const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: ProfileSendTo(
-                                              text: 'enviado a ',
-                                            )),
-                                      Card(
-                                        margin: const EdgeInsets.all(8.0),
-                                        elevation: 0.5,
-                                        child: ListTile(
-                                            onTap: () {},
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 2,
-                                                    horizontal: 10),
-                                            visualDensity: const VisualDensity(
-                                                vertical: 1),
-                                            leading: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(snapshot
-                                                    .data![index].codigo
-                                                    .toString())
-                                              ],
-                                            ),
-                                            title: Text(
-                                              snapshot.data![index].descripcion,
-                                              style: const TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                            subtitle: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text.rich(TextSpan(
-                                                    text: util.getCurrency(
-                                                        snapshot.data![index]
-                                                                .preciounitario ??
-                                                            0,
-                                                        false),
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 12,
-                                                        color:
-                                                            Colors.blueAccent),
-                                                    children: [
-                                                      TextSpan(
-                                                          text:
-                                                              " x ${snapshot.data![index].cantidad}",
-                                                          style: const TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal))
-                                                    ])),
-                                                if (snapshot
-                                                        .data![index].descuento!
-                                                        .toDouble() >
-                                                    0)
-                                                  Text(
-                                                    "-${util.getCurrency(snapshot.data![index].descuento ?? 0, false)}",
-                                                    style: const TextStyle(
-                                                        fontSize: 12,
-                                                        fontStyle:
-                                                            FontStyle.italic),
-                                                  )
-                                              ],
-                                            ),
-                                            trailing: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                    util
-                                                        .getCurrency(snapshot
-                                                                .data![index]
-                                                                .subtotal ??
-                                                            0)
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w500)),
-                                                if (snapshot
-                                                        .data![index].itebis! >
-                                                    0)
-                                                  Text(
-                                                    'Itbis${util.getCurrency(snapshot.data![index].itebis ?? 0, false)}',
-                                                    style: const TextStyle(
-                                                        fontSize: 12,
-                                                        fontStyle:
-                                                            FontStyle.italic),
-                                                  )
-                                              ],
-                                            )),
-                                      ),
-                                    ],
-                                  );
-                                }
-                              });
-                        }
-                      default:
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                    }
-                  }),
-            ),
-          ],
-        ),
-        bottomNavigationBar: TotalWidget(
-          total: total,
-          subtotal: subtotal,
-          itbis: itbis,
-          descuento: descuento,
-        ));
+    return Expanded(
+      child: FutureBuilder(
+          future: detalleLista,
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Detalle>> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Expanded(
+                    child: ListView.separated(
+                        itemBuilder: (context, index) => const Text('data'),
+                        separatorBuilder: (context, index) => const SizedBox(
+                              height: 16,
+                            ),
+                        itemCount: 8));
+              case ConnectionState.done:
+                final posts = snapshot.data!;
+                return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) {
+                      Text('data');
+                    });
+              default:
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+            }
+          }),
+    );
   }
 }
+
+
+class FacturaDetalleBody1 extends StatelessWidget {
+  const FacturaDetalleBody1({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        Text("facturaId ${widget.facturaId}"),
+        Expanded(
+          child: FutureBuilder(
+              future: detalleLista,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Detalle>> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case ConnectionState.done:
+                    if (listaDataTotal == 0) {
+                      return const Center(
+                        child: Text('No existe nada para mostrar'),
+                      );
+                    } else {
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: listaDataTotal,
+                          itemBuilder: (context, index) {
+                            if (listaDataTotal == 0) {
+                              return const Center(
+                                child: Text('text'),
+                              );
+                            } else {
+                              return Column(
+                                children: [
+                                  if (index == 0)
+                                    Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ProfileContainer(
+                                          header: inheader,
+                                        )),
+                                  if (index == 0)
+                                    const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: ProfileSendTo(
+                                          text: 'enviado a ',
+                                        )),
+                                  Card(
+                                    margin: const EdgeInsets.all(8.0),
+                                    elevation: 0.5,
+                                    child: ListTile(
+                                        onTap: () {},
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 2, horizontal: 10),
+                                        visualDensity:
+                                            const VisualDensity(vertical: 1),
+                                        leading: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(snapshot.data![index].codigo
+                                                .toString())
+                                          ],
+                                        ),
+                                        title: Text(
+                                          snapshot.data![index].descripcion,
+                                          style: const TextStyle(
+                                              color: Colors.black),
+                                        ),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text.rich(TextSpan(
+                                                text: util.getCurrency(
+                                                    snapshot.data![index]
+                                                            .preciounitario ??
+                                                        0,
+                                                    false),
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12,
+                                                    color: Colors.blueAccent),
+                                                children: [
+                                                  TextSpan(
+                                                      text:
+                                                          " x ${snapshot.data![index].cantidad}",
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.black,
+                                                          fontWeight: FontWeight
+                                                              .normal))
+                                                ])),
+                                            if (snapshot.data![index].descuento!
+                                                    .toDouble() >
+                                                0)
+                                              Text(
+                                                "-${util.getCurrency(snapshot.data![index].descuento ?? 0, false)}",
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontStyle:
+                                                        FontStyle.italic),
+                                              )
+                                          ],
+                                        ),
+                                        trailing: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                                util
+                                                    .getCurrency(snapshot
+                                                            .data![index]
+                                                            .subtotal ??
+                                                        0)
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                            if (snapshot.data![index].itebis! >
+                                                0)
+                                              Text(
+                                                'Itbis${util.getCurrency(snapshot.data![index].itebis ?? 0, false)}',
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontStyle:
+                                                        FontStyle.italic),
+                                              )
+                                          ],
+                                        )),
+                                  ),
+                                ],
+                              );
+                            }
+                          });
+                    }
+                  default:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                }
+              }),
+        ),
+      ],
+    );
+  }
+}
+
 
 getText(TextEditingController ctrl, String labelText, Icon suffixIcon) {
   return TextField(
@@ -290,4 +298,10 @@ getTextForm(TextEditingController ctrl, String labelText, Icon suffixIcon) {
         border: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black))),
   );
+}
+
+class FacturaDetalleArguments {
+  final int arguments;
+
+  FacturaDetalleArguments({required this.arguments});
 }
