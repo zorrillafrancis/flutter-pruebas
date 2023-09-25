@@ -1,50 +1,38 @@
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:mi_app_01/pages/factura_detalle/factura_detalle.dart';
+import 'package:mi_app_01/models/facturasM.dart';
+import 'package:mi_app_01/utils/size_config.dart';
+import 'package:mi_app_01/utils/constants.dart';
 import '../../components/default_button.dart';
 import '../../components/loading_list.dart';
-import '../../models/facturasM.dart';
-import '../../utils/constants.dart';
-import '../../utils/size_config.dart';
 import '../../utils/utils.dart';
-import 'package:http/http.dart' as http;
+import '../factura_detalle/factura_detalle.dart';
+import '../users/users_body.dart';
+import 'facturas_menu_header.dart';
 
-class FacturaListadoBody1 extends StatefulWidget {
-  const FacturaListadoBody1({super.key});
+int listaDataTotal = 0;
+String numero_factura = "";
+String dateFrom = DateFormat('yyyy-MM-ddT00:00:00.000').format(DateTime.now());
+String dateTo = DateFormat('yyyy-MM-ddT23:59:59.999').format(DateTime.now());
+List<Facturas> dataFactura = [];
+Future<List<Facturas>>? listData;
+Future<List<Facturas>>? listaData;
 
-  @override
-  State<FacturaListadoBody1> createState() => _FacturaListadoBody1State();
-}
-
-class _FacturaListadoBody1State extends State<FacturaListadoBody1> {
-  @override
-  Widget build(BuildContext context) {
-    return FacturasListadoBody();
-  }
-}
+TextEditingController txtNumber = TextEditingController();
+TextEditingController txtDateFrom = TextEditingController();
+TextEditingController txtDateTo = TextEditingController();
 
 class FacturasListadoBody extends StatefulWidget {
   const FacturasListadoBody({super.key});
 
   @override
-  State<FacturasListadoBody> createState() => _FacturasListadoState();
+  State<FacturasListadoBody> createState() => _FacturasListadoBodyState();
 }
 
-class _FacturasListadoState extends State<FacturasListadoBody> {
+class _FacturasListadoBodyState extends State<FacturasListadoBody> {
   Util util = Util();
-  Future<List<Facturas>>? listData;
-  List<Facturas> dataFactura = [];
-  String numero_factura = "";
-  TextEditingController txtNumber = TextEditingController();
-  TextEditingController txtDateFrom = TextEditingController();
-  TextEditingController txtDateTo = TextEditingController();
-  String dateFrom =
-      DateFormat('yyyy-MM-ddT00:00:00.000').format(DateTime.now());
-  String dateTo = DateFormat('yyyy-MM-ddT23:59:59.999').format(DateTime.now());
-
   Future<List<Facturas>> getFacturas() async {
     List<Facturas> dataFactura = [];
 
@@ -91,9 +79,7 @@ class _FacturasListadoState extends State<FacturasListadoBody> {
           dataFactura.add(f);
         }
       } catch (e) {
-        if (kDebugMode) {
-          print(e);
-        }
+        print(e);
       }
     }
 
@@ -121,236 +107,248 @@ class _FacturasListadoState extends State<FacturasListadoBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: getProportionateScreenWidth(10),
-              horizontal: getProportionateScreenWidth(10)),
-          child: DefaultButton(
-              text: "Filtrar",
-              press: () async {
-                await showDialog<void>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          content: Stack(
-                            clipBehavior: Clip.none,
-                            children: <Widget>[
-                              Positioned(
-                                right: -40,
-                                top: -40,
-                                child: InkResponse(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const CircleAvatar(
-                                    backgroundColor: kPrimaryColor,
-                                    child: Icon(
-                                      Icons.close,
-                                      color: Colors.white,
+    return Column(
+      children: [
+        Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: getProportionateScreenWidth(10),
+                horizontal: getProportionateScreenWidth(10)),
+            child: DefaultButton(
+                text: "Filtrar",
+                press: () async {
+                  await showDialog<void>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            content: Stack(
+                              clipBehavior: Clip.none,
+                              children: <Widget>[
+                                Positioned(
+                                  right: -40,
+                                  top: -40,
+                                  child: InkResponse(
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const CircleAvatar(
+                                      backgroundColor: kPrimaryColor,
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: TextField(
-                                      controller: txtNumber,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                          hintText: "",
-                                          labelText: "Numero Factura",
-                                          prefixIcon:
-                                              Icon(Icons.post_add_outlined)),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: TextField(
+                                        controller: txtNumber,
+                                        keyboardType: TextInputType.number,
+                                        decoration: const InputDecoration(
+                                            hintText: "",
+                                            labelText: "Numero Factura",
+                                            prefixIcon:
+                                                Icon(Icons.post_add_outlined)),
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: TextFormField(
-                                      controller: txtDateFrom,
-                                      keyboardType: TextInputType.none,
-                                      showCursor: false,
-                                      readOnly: true,
-                                      decoration: const InputDecoration(
-                                          hintText: "",
-                                          prefixIcon: Icon(
-                                            Icons.calendar_today,
-                                          ),
-                                          labelText: "Fecha Desde"),
-                                      onTap: () async {
-                                        DateTime? pickedDate =
-                                            await getDatePicker(context);
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: TextFormField(
+                                        controller: txtDateFrom,
+                                        keyboardType: TextInputType.none,
+                                        showCursor: false,
+                                        readOnly: true,
+                                        decoration: const InputDecoration(
+                                            hintText: "",
+                                            prefixIcon: Icon(
+                                              Icons.calendar_today,
+                                            ),
+                                            labelText: "Fecha Desde"),
+                                        onTap: () async {
+                                          DateTime? pickedDate =
+                                              await getDatePicker(context);
 
-                                        if (pickedDate != null) {
-                                          setState(() {
+                                          if (pickedDate != null) {
+                                            setState(() {
+                                              dateFrom = DateFormat(
+                                                      'yyyy-MM-ddT00:00:00.000')
+                                                  .format(pickedDate);
+                                              txtDateFrom.text =
+                                                  DateFormat('dd/MM/yyyy')
+                                                      .format(pickedDate);
+                                            });
+                                          } else {
+                                            print("Date is not selected");
                                             dateFrom = DateFormat(
                                                     'yyyy-MM-ddT00:00:00.000')
-                                                .format(pickedDate);
-                                            txtDateFrom.text =
-                                                DateFormat('dd/MM/yyyy')
-                                                    .format(pickedDate);
-                                          });
-                                        } else {
-                                          dateFrom = DateFormat(
-                                                  'yyyy-MM-ddT00:00:00.000')
-                                              .format(DateTime.now());
-                                        }
-                                      },
+                                                .format(DateTime.now());
+                                          }
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: TextFormField(
-                                      controller: txtDateTo,
-                                      keyboardType: TextInputType.none,
-                                      showCursor: false,
-                                      readOnly: true,
-                                      decoration: const InputDecoration(
-                                          hintText: "",
-                                          prefixIcon: Icon(
-                                            Icons.calendar_today,
-                                          ),
-                                          labelText: "Fecha Hasta"),
-                                      onTap: () async {
-                                        DateTime? pickedDate =
-                                            await getDatePicker(context);
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: TextFormField(
+                                        controller: txtDateTo,
+                                        keyboardType: TextInputType.none,
+                                        showCursor: false,
+                                        readOnly: true,
+                                        decoration: const InputDecoration(
+                                            hintText: "",
+                                            prefixIcon: Icon(
+                                              Icons.calendar_today,
+                                            ),
+                                            labelText: "Fecha Hasta"),
+                                        onTap: () async {
+                                          DateTime? pickedDate =
+                                              await getDatePicker(context);
 
-                                        if (pickedDate != null) {
-                                          setState(() {
+                                          if (pickedDate != null) {
+                                            setState(() {
+                                              dateTo = DateFormat(
+                                                      'yyyy-MM-ddT23:59:59.999')
+                                                  .format(pickedDate);
+                                              txtDateTo.text =
+                                                  DateFormat('dd/MM/yyyy')
+                                                      .format(pickedDate);
+                                            });
+                                          } else {
+                                            print("Date is not selected");
                                             dateTo = DateFormat(
                                                     'yyyy-MM-ddT23:59:59.999')
-                                                .format(pickedDate);
-                                            txtDateTo.text =
-                                                DateFormat('dd/MM/yyyy')
-                                                    .format(pickedDate);
-                                          });
-                                        } else {
-                                          dateTo = DateFormat(
-                                                  'yyyy-MM-ddT23:59:59.999')
-                                              .format(DateTime.now());
-                                        }
-                                      },
+                                                .format(DateTime.now());
+                                          }
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: getProportionateScreenWidth(5),
-                                  ),
-                                  DefaultButton(
-                                      text: "Buscar",
-                                      press: () {
-                                        FocusScope.of(context).unfocus();
+                                    SizedBox(
+                                      height: getProportionateScreenWidth(5),
+                                    ),
+                                    DefaultButton(
+                                        text: "Buscar",
+                                        press: () {
+                                          FocusScope.of(context).unfocus();
 
-                                        setState(() {
-                                          setState(() {
-                                            numero_factura = txtNumber.text;
-                                            loadData();
-                                          });
-                                        });
-
-                                        Navigator.of(context).pop();
-                                      })
-                                ],
-                              ),
-                            ],
-                          ),
-                        ));
-              })),
-      Expanded(
-        child: FutureBuilder(
-            future: listData,
-            builder: (BuildContext context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return ListView.separated(
-                      itemBuilder: (context, index) => const LoadingList(),
-                      separatorBuilder: (context, index) => const SizedBox(
-                            height: 16,
-                          ),
-                      itemCount: 8);
-                case ConnectionState.done:
-                  if (snapshot.data!.length == 0) {
-                    return const Center(
-                      child: Text('No existe información para mostrar'),
-                    );
-                  }
-
-                  final posts = snapshot.data!;
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return Dismissible(
-                          key: Key(snapshot.data![index].id.toString()),
-                          background: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            decoration:
-                                const BoxDecoration(color: Colors.blueAccent),
-                            child: Row(
-                              children: [
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.print,
-                                      color: Colors.white,
-                                    ))
+                                          Navigator.of(context).pop();
+                                        })
+                                  ],
+                                ),
                               ],
                             ),
-                          ),
-                          child: Card(
-                            margin: const EdgeInsets.all(8.0),
-                            elevation: 0.5,
-                            child: ListTile(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, FacturaDetalle.routeName,
-                                      arguments: FacturaDetalleArguments(
-                                          facturaId: snapshot.data![index].id));
-                                },
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 10),
-                                visualDensity: const VisualDensity(vertical: 1),
-                                leading: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                          ));
+                  setState(() {
+                    print('==== cerrado =====');
+                    setState(() {
+                      numero_factura = txtNumber.text;
+                      loadData();
+                    });
+                  });
+                })),
+        Expanded(
+          child: FutureBuilder(
+              future: listData,
+              builder: (BuildContext context, snapshot) {
+                print("==== connection =====");
+                print(snapshot.connectionState);
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return ListView.separated(
+                        itemBuilder: (context, index) => const LoadingList(),
+                        separatorBuilder: (context, index) => const SizedBox(
+                              height: 16,
+                            ),
+                        itemCount: 8);
+                  case ConnectionState.done:
+                    if (listaDataTotal == 0) {
+                      return const Center(
+                        child: Text('No existe nada para mostrar'),
+                      );
+                    } else {
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return Dismissible(
+                              key: Key(snapshot.data![index].id.toString()),
+                              background: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                decoration: const BoxDecoration(
+                                    color: Colors.blueAccent),
+                                child: Row(
                                   children: [
-                                    Text(snapshot.data![index].numeroFactura
-                                        .toString())
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: const Icon(
+                                          Icons.print,
+                                          color: Colors.white,
+                                        ))
                                   ],
                                 ),
-                                title: Text(
-                                  snapshot.data![index].nombre.toString(),
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(snapshot.data![index].fecha),
-                                    Text(
-                                      snapshot.data![index].usuario.toString(),
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          fontStyle: FontStyle.italic),
+                              ),
+                              child: Card(
+                                margin: EdgeInsets.all(8.0),
+                                elevation: 0.5,
+                                child: ListTile(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, FacturaDetalle.routeName,
+                                          arguments: FacturaDetalleArguments(
+                                              facturaId:
+                                                  snapshot.data![index].id));
+                                    },
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 2, horizontal: 10),
+                                    visualDensity:
+                                        const VisualDensity(vertical: 1),
+                                    leading: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(snapshot.data![index].numeroFactura
+                                            .toString())
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                trailing: Text(snapshot.data![index].total,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w500)),
-                                enabled: snapshot.data![index].pkidestatus
-                                        .toString() !=
-                                    ""),
-                          ),
-                          onDismissed: (value) {},
-                        );
-                      });
-                default:
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-              }
-            }),
-      )
-    ]);
+                                    title: Text(
+                                      snapshot.data![index].nombre.toString(),
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(snapshot.data![index].fecha),
+                                        Text(
+                                          snapshot.data![index].usuario
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Text(snapshot.data![index].total,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500)),
+                                    enabled: snapshot.data![index].pkidestatus
+                                            .toString() !=
+                                        ""),
+                              ),
+                              onDismissed: (value) {},
+                            );
+                          });
+                    }
+                  default:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                }
+              }),
+        ),
+      ],
+    );
   }
 }

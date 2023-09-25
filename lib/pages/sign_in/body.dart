@@ -146,7 +146,8 @@ class _SingFormState extends State<SingForm> {
     super.initState();
     getData().then((e) {
       if (e == "") {
-        Navigator.pushNamed(context, SplashScreen.routeName);
+      } else {
+        Navigator.pushNamed(context, Bienvenida.routeName);
       }
     });
   }

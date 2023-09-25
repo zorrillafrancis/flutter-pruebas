@@ -5,6 +5,7 @@ import 'package:firebase_app_installations/firebase_app_installations.dart';
 import 'package:flutter/foundation.dart';
 import '../../data/data-entity.dart';
 import '../../main.dart';
+import '../../pages/factura_detalle/factura_detalle.dart';
 
 FirebaseInstallations installations = FirebaseInstallations.instance;
 
@@ -33,42 +34,50 @@ class PushNotificationProvider {
 
     // replacement for onResume: When the app is in the background and opened directly from the push notification.
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (kDebugMode) {
-        print('=====xxxx Aplicacion Abierta xxx=====');
+      try {
+        if (kDebugMode) {
+          print('=====xxxx Aplicacion Abierta xxx===== 1111');
+          print(message.data['id']);
+        }
+
+        int argumento = int.parse(message.data['id']);
+
+        if (kDebugMode) {
+          print('==== argumento====');
+          print(argumento);
+        }
+
+        natigatorKey.currentState?.pushNamed('/facturaDetalle',
+            arguments: FacturaDetalleArguments(facturaId: argumento));
+      } catch (e) {
+        print(e);
       }
-
-      String argumento = message.data['id'] ?? 'no-data';
-
-      if (kDebugMode) {
-        print('==== argumento====');
-        print(argumento);
-      }
-
-      natigatorKey.currentState
-          ?.pushNamed('/facturaDetalle', arguments: argumento);
     });
 
     // onMessage: When the app is open and it receives a push notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (kDebugMode) {
-        print('===== onMessage Aplicacion Abierta =====222');
-      }
-
-      String argumento = "no-data";
-
-      if (Platform.isAndroid) {
-        argumento = message.data['id'] ?? 'no-data';
-
-        if (message.notification != null) {
-          if (kDebugMode) {
-            print('==== argumento====');
-            print(argumento);
-          }
-
-          _mensajesStreamcontroller.sink.add(argumento);
-          natigatorKey.currentState
-              ?.pushNamed('/facturaDetalle', arguments: argumento);
+      try {
+        if (kDebugMode) {
+          print('===== onMessage Aplicacion Abierta =====222');
+          print(message.data['id']);
         }
+
+        int argumento = int.parse(message.data['id']);
+
+        if (Platform.isAndroid) {
+          if (message.notification != null) {
+            if (kDebugMode) {
+              print('==== argumento====');
+              print(argumento);
+            }
+
+            _mensajesStreamcontroller.sink.add(argumento.toString());
+            natigatorKey.currentState?.pushNamed('/facturaDetalle',
+                arguments: FacturaDetalleArguments(facturaId: argumento));
+          }
+        }
+      } catch (e) {
+        print(e);
       }
     });
   }

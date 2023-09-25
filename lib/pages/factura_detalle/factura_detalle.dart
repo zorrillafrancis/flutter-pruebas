@@ -4,13 +4,11 @@ import 'package:mi_app_01/components/loading_list.dart';
 import 'package:mi_app_01/pages/factura_detalle/factura_profile_container.dart';
 import 'package:mi_app_01/pages/factura_detalle/factura_profile_send_to.dart';
 import 'package:mi_app_01/models/facturasDetalleModel.dart';
-import 'package:mi_app_01/pages/factura_detalle/factura_total.dart';
 import 'package:mi_app_01/pages/facturas/facturas_menu_header.dart';
 import 'package:http/http.dart' as http;
 import 'package:mi_app_01/utils/constants.dart';
 import '../../utils/utils.dart';
 
-int listaDataTotal = 0;
 Header? inheader;
 String displayText = "";
 Util util = Util();
@@ -18,89 +16,30 @@ double total = 0;
 double? itbis = 0;
 double? subtotal = 0;
 double? descuento = 0;
+Future<List<Detalle>>? detalleLista;
 
-class FacturaDetalle extends StatefulWidget {
+class FacturaDetalle extends StatelessWidget {
   static const routeName = '/facturaDetalle';
+  FacturaDetalle({super.key});
 
-  const FacturaDetalle({super.key});
-
-  @override
-  State<FacturaDetalle> createState() => _FacturaDetalleState();
-}
-
-class _FacturaDetalleState extends State<FacturaDetalle> {
   @override
   Widget build(BuildContext context) {
     final arg =
         ModalRoute.of(context)!.settings.arguments as FacturaDetalleArguments;
 
-    return Scaffold(
-      appBar: FacturasMenuHeader().getAppBar('Detalle de la Factura'),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          FacturaDetallebody(
-            arg: arg.facturaId,
-          )
-        ],
-      ),
-      bottomNavigationBar: Container(
-          height: 120,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          decoration: BoxDecoration(color: Colors.white, boxShadow: [
-            BoxShadow(
-                offset: const Offset(0, -15),
-                blurRadius: 20,
-                color: const Color(0xFFDADADA).withOpacity(0.15))
-          ]),
-          child: Row(
-            children: [
-              Container(
-                height: 60,
-                width: 200,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Text(
-                  util.getCurrency(total),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                      color: Colors.white),
-                ),
-              ),
-              const Spacer(),
-              Container(
-                height: 60,
-                width: 150,
-                alignment: Alignment.center,
-                child: const Text(
-                  "Ver Detalle",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.blueAccent),
-                ),
-              ),
-            ],
-          )),
-    );
+    return FacturaScaff(arg: arg.facturaId);
   }
 }
 
-class FacturaDetallebody extends StatefulWidget {
+class FacturaScaff extends StatefulWidget {
   final int arg;
-  const FacturaDetallebody({super.key, required this.arg});
+  const FacturaScaff({super.key, required this.arg});
 
   @override
-  State<FacturaDetallebody> createState() => _FacturaDetallebodyState();
+  State<FacturaScaff> createState() => _FacturaScaffState();
 }
 
-class _FacturaDetallebodyState extends State<FacturaDetallebody> {
-  Future<List<Detalle>>? detalleLista;
+class _FacturaScaffState extends State<FacturaScaff> {
   String url = "";
 
   Future<List<Detalle>>? loadData() async {
@@ -124,30 +63,121 @@ class _FacturaDetallebodyState extends State<FacturaDetallebody> {
       }
     }
 
-    listaDataTotal = list.length;
     return list;
   }
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      total = 0;
+    });
+
     detalleLista = loadData();
 
-    detalleLista!.then((value) {
-      print('then');
-      print(value);
-      double totalIn = 0;
+    detalleLista!.then((res) {
+      double inSubtotal = 0;
+      double inItbis = 0;
+      double inDescuento = 0;
 
-      for (Detalle item in value) {
-        totalIn += (item.subtotal ?? 0);
-        print(totalIn);
+      for (Detalle item in res) {
+        if (item.subtotal != null) {
+          inSubtotal += (item.subtotal ?? 0);
+        }
+
+        if (item.descuento != null) {
+          inDescuento += (item.descuento ?? 0);
+        }
+
+        if (item.itebis != null) {
+          inItbis += (item.itebis ?? 0);
+        }
       }
 
       setState(() {
-        total = 45;
+        subtotal = inSubtotal;
+        itbis = inItbis;
+        descuento = inDescuento;
+        total = (inSubtotal + inItbis) - inDescuento;
       });
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: FacturasMenuHeader().getAppBar('Detalle de la Factura'),
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          FacturaDetallebody()
+        ],
+      ),
+      floatingActionButton: Total(),
+      extendBody: false,
+    );
+  }
+}
+
+class Total extends StatefulWidget {
+  const Total({super.key});
+
+  @override
+  State<Total> createState() => _TotalState();
+}
+
+class _TotalState extends State<Total> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 100,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          BoxShadow(
+              offset: const Offset(0, -15),
+              blurRadius: 20,
+              color: const Color(0xFFDADADA).withOpacity(0.15))
+        ]),
+        child: Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 10),
+              height: 60,
+              width: 200,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Text(
+                util.getCurrency(total),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                    color: Colors.white),
+              ),
+            ),
+            const Spacer(),
+            Container(
+              height: 60,
+              width: 150,
+              alignment: Alignment.center,
+              child: const Text(
+                "Ver Detalle",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.blueAccent),
+              ),
+            ),
+          ],
+        ));
+  }
+}
+
+class FacturaDetallebody extends StatelessWidget {
+  const FacturaDetallebody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +298,7 @@ class FacturaDetalleBody1 extends StatelessWidget {
                           style: const TextStyle(fontWeight: FontWeight.w500)),
                       if (detalle.itebis! > 0)
                         Text(
-                          'Itbis${util.getCurrency(detalle.itebis ?? 0, false)}',
+                          'Itbis ${util.getCurrency(detalle.itebis ?? 0, false)}',
                           style: const TextStyle(
                               fontSize: 12, fontStyle: FontStyle.italic),
                         )
@@ -314,3 +344,5 @@ class FacturaDetalleArguments {
 
   FacturaDetalleArguments({required this.facturaId});
 }
+
+typedef ColorCallback = void Function(Color color);
