@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:mi_app_01/pages/facturas/facturas_Listado.dart';
 import 'package:mi_app_01/pages/users/users.dart';
 import '../pages/bienvenida/bienvenida.dart';
-import '../pages/facturas/facturaDetalle.dart';
-import '../pages/facturas/facturasListado.dart';
+import '../pages/factura_detalle/factura_detalle.dart';
 import '../pages/pruebas/prueba.dart';
 import '../pages/sign_in/sign_in_screen.dart';
 import '../pages/splash/splash_screen.dart';

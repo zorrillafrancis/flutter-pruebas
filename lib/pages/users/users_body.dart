@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/models/userModel.dart';
 import 'package:mi_app_01/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
+import '../../components/loading_list.dart';
 import '../../utils/size_config.dart';
 
 Future<List<UserModel>>? usersList;
@@ -49,7 +51,9 @@ class _UsersState extends State<UsersBody> {
           userList.add(us);
         }
       } catch (error) {
-        print(error);
+        if (kDebugMode) {
+          print(error);
+        }
       }
     }
 
@@ -76,13 +80,12 @@ class _UsersState extends State<UsersBody> {
                   AsyncSnapshot<List<UserModel>> snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return Expanded(
-                        child: ListView.separated(
-                            itemBuilder: (context, index) => LoadingList(),
-                            separatorBuilder: (context, index) => SizedBox(
-                                  height: 16,
-                                ),
-                            itemCount: 8));
+                    return ListView.separated(
+                        itemBuilder: (context, index) => const LoadingList(),
+                        separatorBuilder: (context, index) => const SizedBox(
+                              height: 16,
+                            ),
+                        itemCount: 8);
                   case ConnectionState.done:
                     final posts = snapshot.data!;
                     return ListView.builder(
@@ -162,65 +165,6 @@ class UserList extends StatelessWidget {
                     )),
         ),
       ],
-    );
-  }
-}
-
-class LoadingList extends StatelessWidget {
-  const LoadingList({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 5),
-      child: Row(
-        children: [
-          Loading(
-            height: 120,
-            width: 120,
-          ),
-          SizedBox(
-            width: 16,
-          ),
-          Expanded(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Loading(width: 80),
-              SizedBox(height: 8),
-              Loading(),
-              SizedBox(height: 8),
-              Loading(),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(child: Loading()),
-                ],
-              )
-            ],
-          ))
-        ],
-      ),
-    );
-  }
-}
-
-class Loading extends StatelessWidget {
-  final double? height, width;
-
-  const Loading({super.key, this.height, this.width});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: width,
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.04),
-          borderRadius: const BorderRadius.all(Radius.circular(16))),
     );
   }
 }

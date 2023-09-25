@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../utils/utils.dart';
 
-class TotalWidget extends StatelessWidget {
-  final double total;
-  final double subtotal;
-  final double itbis;
-  final double descuento;
-  const TotalWidget(
+class FacturaTotal extends StatelessWidget {
+  final double? total;
+  final double? subtotal;
+  final double? itbis;
+  final double? descuento;
+  const FacturaTotal(
       {super.key,
       required this.total,
       required this.subtotal,
@@ -17,7 +17,7 @@ class TotalWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Util util = Util();
 
-    if (total > 0) {
+    if (total! > 0) {
       return Container(
           height: 120,
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -37,7 +37,7 @@ class TotalWidget extends StatelessWidget {
                     color: Colors.blueAccent,
                     borderRadius: BorderRadius.circular(10)),
                 child: Text(
-                  util.getCurrency(total),
+                  util.getCurrency(total!),
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 25,

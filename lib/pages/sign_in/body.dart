@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_app_01/components/default_button.dart';
+import 'package:mi_app_01/pages/splash/splash_screen.dart';
 import 'package:mi_app_01/utils/constants.dart';
 import 'package:mi_app_01/models/userModel.dart';
 import 'package:mi_app_01/pages/bienvenida/bienvenida.dart';
@@ -69,6 +71,7 @@ class _SingFormState extends State<SingForm> {
   final _formKey = GlobalKey<FormState>();
   String email = "";
   String clave = "";
+  String? userName;
 
   Future<bool> saveLogin(String user) async {
     try {
@@ -79,6 +82,16 @@ class _SingFormState extends State<SingForm> {
     } catch (e) {
       return false;
     }
+  }
+
+  Future<String> getData() async {
+    if (kDebugMode) {
+      print('object');
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString('userName') ?? "";
   }
 
   Future<UserModelResponse> login(String user, String pass) async {
@@ -126,6 +139,16 @@ class _SingFormState extends State<SingForm> {
       umr.mensaje = e.toString();
       return umr;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData().then((e) {
+      if (e == "") {
+        Navigator.pushNamed(context, SplashScreen.routeName);
+      }
+    });
   }
 
   @override
